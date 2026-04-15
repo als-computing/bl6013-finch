@@ -1,6 +1,7 @@
 import Paper from "@/components/Paper";
 import Synoptic, { SynopticDevice } from "@/components/Synoptic";
 import TablePV, { TableColumn } from "@/components/TablePV";
+import { ScanOrStripchart } from "@/features/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer } from "@phosphor-icons/react";
 
 export default function MonitorPage() {
@@ -158,13 +159,11 @@ export default function MonitorPage() {
                     </Paper>
 
                     {/* Strip Charts / Scan */}
-                    <Paper className="flex-1">
-                        <div className="h-full flex items-center justify-center bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg border-2 border-dashed border-purple-200">
-                            <div className="text-center">
-                                <h2 className="text-xl font-semibold text-purple-800 mb-2">Strip Charts / Scan</h2>
-                                <p className="text-purple-600 text-sm">Time series data and scan progress</p>
-                            </div>
-                        </div>
+                    <Paper className="flex-1 min-h-[65rem]">
+                        <ScanOrStripchart 
+                            motorPVs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4', 'IOC:m5']}
+                            signalPVs={['IOC:m6', 'IOC:m7', 'IOC:m8']}
+                        />
                     </Paper>
                 </div>
             </div>
