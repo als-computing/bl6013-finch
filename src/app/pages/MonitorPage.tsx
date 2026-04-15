@@ -163,6 +163,8 @@ export default function MonitorPage() {
                         <ScanOrStripchart 
                             motorPVs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4', 'IOC:m5']}
                             signalPVs={['IOC:m6', 'IOC:m7', 'IOC:m8']}
+                            motorOphydNames={['sim_motor']}
+                            signalOphydNames={['sim_m1', 'sim_m2', 'sim_m3']}
                         />
                     </Paper>
                 </div>

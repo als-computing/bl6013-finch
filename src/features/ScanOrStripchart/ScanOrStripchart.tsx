@@ -9,6 +9,10 @@ export interface ScanOrStripchartProps {
     motorPVs?: string[];
     /** Array of signal PV names for stripchart functionality */
     signalPVs?: string[];
+    /** Array of motor device names for scan functionality */
+    motorOphydNames?: string[];
+    /** Array of signal device names for scan functionality */
+    signalOphydNames?: string[];
     /** Additional CSS classes for the container */
     className?: string;
 }
@@ -16,6 +20,8 @@ export interface ScanOrStripchartProps {
 export default function ScanOrStripchart({ 
     motorPVs = [], 
     signalPVs = [], 
+    motorOphydNames,
+    signalOphydNames,
     className = '' 
 }: ScanOrStripchartProps) {
     const [viewMode, setViewMode] = useState<ViewMode>('scan');
@@ -57,7 +63,10 @@ export default function ScanOrStripchart({
             {/* Content Area */}
             <div className="flex-1 overflow-hidden">
                 {viewMode === 'scan' ? (
-                    <Scan />
+                    <Scan 
+                        motorOphydNames={motorOphydNames}
+                        signalOphydNames={signalOphydNames}
+                    />
                 ) : (
                     <Stripchart 
                         motorPVs={motorPVs}
