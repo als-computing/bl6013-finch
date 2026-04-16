@@ -23,6 +23,7 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
     const [isScanning, setIsScanning] = useState<boolean>(false);
     const [plotsEnabled, setPlotsEnabled] = useState<boolean>(true);
     const [plotKey, setPlotKey] = useState<number>(0);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     // Get devices from Queue Server if not provided via props
     const { data: devicesData, isLoading: devicesLoading, error: devicesError } = useDevicesAllowedQuery({
@@ -89,6 +90,7 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
     const handleScanSuccess = (response: any) => {
         console.log('Scan plan executed successfully:', response);
         setIsScanning(true);
+        setErrorMessage(''); // Clear any previous errors
         // The scan will run on the queue server, we can monitor its progress
         // For now, just reset scanning state after a delay
         setTimeout(() => setIsScanning(false), 5000);
@@ -97,8 +99,9 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
     const handleScanError = (error: string) => {
         console.error('Scan plan execution failed:', error);
         setIsScanning(false);
-        // You might want to show this error in the UI
-        alert(`Scan failed: ${error}`);
+        setErrorMessage(error);
+        // Clear error message after 10 seconds
+        setTimeout(() => setErrorMessage(''), 10000);
     };
 
     const handleClearPlots = () => {
@@ -266,6 +269,24 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
                     {plotsEnabled ? 'Done' : 'Resume'}
                 </button>
             </div>
+
+            {/* Error Message Display */}
+            {errorMessage && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-red-600 text-sm">⚠️ Scan Error:</span>
+                            <span className="text-red-700 text-sm">{errorMessage}</span>
+                        </div>
+                        <button
+                            onClick={() => setErrorMessage('')}
+                            className="text-red-500 hover:text-red-700 text-sm px-2"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Motor vs Signal XY Plot */}
             <div className="h-[400px] bg-white border border-gray-200 rounded-lg p-4">

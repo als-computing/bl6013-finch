@@ -68,7 +68,7 @@ function App() {
         <HubAppLayout 
           routes={routes} 
           headerTitle='AMBER' 
-          headerLogoIcon={<img src="/images/als_logo_wheel.png" alt="ALS Logo" className="h-12 w-12" />} 
+          headerLogoIcon={<img src="/images/als_logo_wheel_blue_multicolored.png" alt="ALS Logo" className="h-12 w-12" />} 
         />
       </QueryClientProvider>
     </FinchConfigProvider>

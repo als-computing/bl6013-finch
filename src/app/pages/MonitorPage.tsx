@@ -1,6 +1,8 @@
 import Paper from "@/components/Paper";
+import Bento from "@/components/Bento";
 import Synoptic, { SynopticDevice } from "@/components/Synoptic";
 import TablePV, { TableColumn } from "@/components/TablePV";
+import CameraContainer from "@/components/Camera/CameraContainer";
 import { ScanOrStripchart } from "@/features/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer } from "@phosphor-icons/react";
 
@@ -64,6 +66,18 @@ export default function MonitorPage() {
             pvs: [
                 { pv: 'fakePV', nickname: 'Test Motor' }
             ]
+        },
+        {
+            name: 'BL6.0.1.3 Beamline',
+            icon: <Atom size={24} />,
+            group: 'Beamline',
+            isBeamline: true,
+            pvs: [
+                { pv: 'IOC:beam_current', nickname: 'Beam Current' },
+                { pv: 'IOC:beam_energy', nickname: 'Energy' },
+                { pv: 'IOC:beam_status', nickname: 'Status' },
+                { pv: 'IOC:shutter_state', nickname: 'Shutter' }
+            ]
         }
     ];
 
@@ -124,42 +138,26 @@ export default function MonitorPage() {
         }
     ];
     return (
-        <div className="h-full w-full space-y-4">
+       <Bento>
             {/* Synoptic Section - Full Width at Top */}
-            <Paper className="w-full p-4 h-fit">
-                <div className="mb-2">
-                    <h2 className="text-xl font-semibold text-blue-800">Beamline Synoptic</h2>
-                    <p className="text-blue-600 text-sm">Live device status and values - single horizontal row with scrolling</p>
-                </div>
+            <Paper className="w-full h-fit" title="Synoptic View">
                 <Synoptic devices={synopticDevices} allowWrap={false} />
             </Paper>
 
-            {/* Bottom Section - Two Columns */}
-            <div className="flex gap-4 h-[calc(100vh-18rem)]">
-                {/* Left Column */}
-                <div className="flex-1 flex flex-col">
-                    {/* Detector Live View */}
-                    <Paper className="flex-1">
-                        <div className="h-full flex items-center justify-center bg-gradient-to-r from-green-50 to-green-100 rounded-lg border-2 border-dashed border-green-200">
-                            <div className="text-center">
-                                <h2 className="text-xl font-semibold text-green-800 mb-2">Detector Live View</h2>
-                                <p className="text-green-600 text-sm">Real-time detector images and data</p>
-                            </div>
-                        </div>
-                    </Paper>
-                </div>
+            {/* Bottom Section - Large Screen = 2 columns, Small Screen = 1 column */}
+            <div className="flex flex-col xl:flex-row  w-full gap-8">
 
-                {/* Right Column */}
-                <div className="flex-1 flex flex-col space-y-4">
+                {/*Left Column */}
+                <div className="w-full xl:w-1/2 flex flex-col h-fit gap-8">
                     {/* All Devices */}
-                    <Paper className="flex-1" title="All Devices">
+                    <Paper className="flex-1 w-full" title="All Devices">
                         <div className="h-[calc(100%-4rem)] w-[calc(100%-4rem)] mx-auto">
                             <TablePV columns={tablePVColumns} maxColumnHeight="calc(100% - 40px)" className=""/>
                         </div>
                     </Paper>
 
                     {/* Strip Charts / Scan */}
-                    <Paper className="flex-1 min-h-[65rem]">
+                    <Paper className="flex-1 min-h-fit w-full">
                         <ScanOrStripchart 
                             motorPVs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4', 'IOC:m5']}
                             signalPVs={['IOC:m6', 'IOC:m7', 'IOC:m8']}
@@ -168,7 +166,19 @@ export default function MonitorPage() {
                         />
                     </Paper>
                 </div>
+
+                {/* Right Column */}
+                <div className="w-full border border-red-500 xl:border-green-500 xl:w-1/2 h-fit">
+                    {/* Detector Live View */}
+                    <Paper className="flex-1 text-slate-700" title="Detectors">
+                        <div className="flex flex-col items-center justify-start">
+                            <CameraContainer prefix='13SIM1' enableControlPanel={true} enableSettings={true} canvasSize="medium"/>
+
+                        </div>
+                    </Paper>
+                </div>
             </div>
-        </div>
+       </Bento>
+       
     );
 }
