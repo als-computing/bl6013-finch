@@ -43,9 +43,9 @@ export default function TablePV({ columns, className = '', maxColumnHeight }: Ta
     };
 
     return (
-        <div className={cn("text-gray-800", className)}>
+        <div className={cn("text-gray-800 bg-white rounded-lg overflow-x-auto", className)}>
             {/* Table Container */}
-            <div className="bg-white rounded-lg overflow-x-auto m-auto w-fit">
+            <div className="  m-auto w-fit">
                 <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(180px, 200px))` }}>
                     {columns.map((column, columnIndex) => {
                         // Calculate connected devices for this column

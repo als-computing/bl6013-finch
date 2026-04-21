@@ -140,8 +140,8 @@ export default function MonitorPage() {
     return (
        <Bento>
             {/* Synoptic Section - Full Width at Top */}
-            <Paper className="w-full h-fit" title="Synoptic View">
-                <Synoptic devices={synopticDevices} allowWrap={false} />
+            <Paper className="w-full h-fit text-slate-700 bg-sky-950" title="Synoptic View">
+                <Synoptic devices={synopticDevices} allowWrap={true} />
             </Paper>
 
             {/* Bottom Section - Large Screen = 2 columns, Small Screen = 1 column */}
@@ -150,14 +150,14 @@ export default function MonitorPage() {
                 {/*Left Column */}
                 <div className="w-full xl:w-1/2 flex flex-col h-fit gap-8">
                     {/* All Devices */}
-                    <Paper className="flex-1 w-full" title="All Devices">
-                        <div className="h-[calc(100%-4rem)] w-[calc(100%-4rem)] mx-auto">
-                            <TablePV columns={tablePVColumns} maxColumnHeight="calc(100% - 40px)" className=""/>
+                    <Paper className="flex-1 w-full bg-transparent">
+                        <div className="h-[calc(100%-4rem)] w-[calc(100%-4rem)] mx-auto flex flex-col">
+                            <TablePV columns={tablePVColumns} maxColumnHeight="calc(100% - 40px)" className="text-slate-700 max-w-fit p-2 bg-slate-100"/>
                         </div>
                     </Paper>
 
                     {/* Strip Charts / Scan */}
-                    <Paper className="flex-1 min-h-fit w-full">
+                    <Paper className="flex-1 min-h-fit w-full text-slate-700">
                         <ScanOrStripchart 
                             motorPVs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4', 'IOC:m5']}
                             signalPVs={['IOC:m6', 'IOC:m7', 'IOC:m8']}
@@ -168,9 +168,9 @@ export default function MonitorPage() {
                 </div>
 
                 {/* Right Column */}
-                <div className="w-full border border-red-500 xl:border-green-500 xl:w-1/2 h-fit">
+                <div className="w-full xl:w-1/2 h-fit">
                     {/* Detector Live View */}
-                    <Paper className="flex-1 text-slate-700" title="Detectors">
+                    <Paper className="flex-1 text-slate-700 bg-transparent" >
                         <div className="flex flex-col items-center justify-start">
                             <CameraContainer prefix='13SIM1' enableControlPanel={true} enableSettings={true} canvasSize="medium"/>
 

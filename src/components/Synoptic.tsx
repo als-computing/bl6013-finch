@@ -38,10 +38,6 @@ export interface SynopticProps {
 export default function Synoptic({ devices, className = '', allowWrap = true }: SynopticProps) {
     const [selectedDevice, setSelectedDevice] = React.useState<SynopticDevice | null>(null);
     
-    // Separate regular devices from beamline devices
-    const regularDevices = devices.filter(device => !device.isBeamline);
-    const beamlineDevices = devices.filter(device => device.isBeamline);
-    
     // Extract all PV names from all devices for the hook
     const pvList = devices.flatMap(device => device.pvs.map(pv => pv.pv));
     
@@ -131,53 +127,29 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                 "flex gap-4 p-4 relative items-center",
                 allowWrap ? 'flex-wrap' : 'overflow-x-auto'
             )}>
-                {/* Regular Devices Section */}
-                <div className={cn(
-                    "flex gap-4 items-center",
-                    allowWrap ? 'flex-wrap' : 'flex-shrink-0'
-                )}>
-                    {regularDevices.map((device, index) => {
-                        // Check if we should show a connecting line to the next device
-                        const showConnectingLine = index < regularDevices.length - 1;
-                        const nextDevice = regularDevices[index + 1];
-                        
-                        const isAnyConnected = device.pvs.some(pv => ophydDevices[pv.pv]?.connected);
-                        const isNextConnected = nextDevice?.pvs.some(pv => ophydDevices[pv.pv]?.connected);
-                        
-                        // Line color: blue if both current and next devices are connected, gray otherwise
-                        const lineColor = isAnyConnected && isNextConnected ? 'bg-blue-400' : 'bg-gray-300';
-                        
-                        return (
-                            <div key={`${device.name}-${index}`} className={cn("flex items-center", !allowWrap && "flex-shrink-0")}>
-                                {renderDeviceCard(device, index, false)}
-                                
-                                {/* Connecting Line */}
-                                {showConnectingLine && (
-                                    <div className={cn("w-8 h-0.5 mx-2 transition-colors duration-200", lineColor)}></div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Vertical Divider (only if there are beamline devices) */}
-                {beamlineDevices.length > 0 && regularDevices.length > 0 && (
-                    <div className="h-32 w-px bg-gray-400 mx-6 flex-shrink-0"></div>
-                )}
-
-                {/* Beamline Devices Section */}
-                {beamlineDevices.length > 0 && (
-                    <div className={cn(
-                        "flex gap-4 items-center",
-                        allowWrap ? 'flex-wrap' : 'flex-shrink-0'
-                    )}>
-                        {beamlineDevices.map((device, index) => (
-                            <div key={`beamline-${device.name}-${index}`} className={cn("flex items-center", !allowWrap && "flex-shrink-0")}>
-                                {renderDeviceCard(device, index, true)}
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {/* All Devices - Regular and Beamline mixed together */}
+                {devices.map((device, index) => {
+                    // Check if we should show a connecting line to the next device (only for regular devices)
+                    const showConnectingLine = !device.isBeamline && index < devices.length - 1 && !devices[index + 1]?.isBeamline;
+                    const nextDevice = devices[index + 1];
+                    
+                    const isAnyConnected = device.pvs.some(pv => ophydDevices[pv.pv]?.connected);
+                    const isNextConnected = nextDevice?.pvs.some(pv => ophydDevices[pv.pv]?.connected);
+                    
+                    // Line color: blue if both current and next devices are connected, gray otherwise
+                    const lineColor = isAnyConnected && isNextConnected ? 'bg-blue-400' : 'bg-gray-300';
+                    
+                    return (
+                        <div key={`${device.name}-${index}`} className={cn("flex items-center", !allowWrap && "flex-shrink-0")}>
+                            {renderDeviceCard(device, index, device.isBeamline)}
+                            
+                            {/* Connecting Line (only between regular devices) */}
+                            {showConnectingLine && (
+                                <div className={cn("w-8 h-0.5 mx-2 transition-colors duration-200", lineColor)}></div>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
             
             {/* Details Section - Shows when a device is selected */}
