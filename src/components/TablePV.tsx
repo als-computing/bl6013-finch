@@ -26,9 +26,25 @@ export interface TablePVProps {
     className?: string;
     /** Maximum height for each column content area (enables scrolling if content exceeds) */
     maxColumnHeight?: string;
+    /** Additional CSS classes for column headers */
+    headerClassName?: string;
+    /** Additional CSS classes for all PV rows */
+    rowClassName?: string;
+    /** Additional CSS classes for connected PV rows */
+    connectedRowClassName?: string;
+    /** Additional CSS classes for disconnected PV rows */
+    disconnectedRowClassName?: string;
 }
 
-export default function TablePV({ columns, className = '', maxColumnHeight }: TablePVProps) {
+export default function TablePV({ 
+    columns, 
+    className = '', 
+    maxColumnHeight,
+    headerClassName,
+    rowClassName,
+    connectedRowClassName,
+    disconnectedRowClassName 
+}: TablePVProps) {
     const [selectedPV, setSelectedPV] = React.useState<string | null>(null);
     
     // Extract all PV names from all columns for the hook
@@ -43,7 +59,7 @@ export default function TablePV({ columns, className = '', maxColumnHeight }: Ta
     };
 
     return (
-        <div className={cn("text-gray-800 bg-white rounded-lg overflow-x-auto", className)}>
+        <div className={cn("text-white bg-sky-950 rounded-lg overflow-x-auto p-4", className)}>
             {/* Table Container */}
             <div className="  m-auto w-fit">
                 <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(180px, 200px))` }}>
@@ -54,9 +70,9 @@ export default function TablePV({ columns, className = '', maxColumnHeight }: Ta
                         const defaultIcon = <Gear size={24} />;
                         
                         return (
-                            <div key={columnIndex}>
+                            <div key={columnIndex} className="">
                                 {/* Column Header */}
-                                <div className="pb-2">
+                                <div className={cn("pb-2", headerClassName)}>
                                     <div className="flex items-center gap-2">
                                         {/* Icon */}
                                         <div className="flex-shrink-0">
@@ -64,12 +80,12 @@ export default function TablePV({ columns, className = '', maxColumnHeight }: Ta
                                         </div>
                                         
                                         {/* Heading */}
-                                        <h3 className="text-gray-800 text-xl truncate flex-1">
+                                        <h3 className="text-white text-xl truncate flex-1">
                                             {column.heading}
                                         </h3>
                                         
                                         {/* Connection Status */}
-                                        <div className="text-xs text-gray-600 flex-shrink-0">
+                                        <div className="text-xs text-white/80 flex-shrink-0">
                                             <span>
                                                 {connectedDevices}
                                             </span>
@@ -96,9 +112,11 @@ export default function TablePV({ columns, className = '', maxColumnHeight }: Ta
                                                 key={pv.pv}
                                                 onClick={() => handlePVClick(pv.pv)}
                                                 className={cn(
-                                                    "px-0 py-1 cursor-pointer transition-colors hover:bg-gray-50",
-                                                    isSelected && "bg-blue-50",
-                                                    !isConnected ? "text-gray-400 bg-gray-25" : "text-gray-800"
+                                                    "px-0 py-1 cursor-pointer transition-colors hover:bg-sky-800",
+                                                    isSelected && "bg-sky-700",
+                                                    !isConnected ? "text-gray-400" : "text-white",
+                                                    rowClassName,
+                                                    isConnected ? connectedRowClassName : disconnectedRowClassName
                                                 )}
                                             >
                                                 <div className="flex justify-between items-center min-w-0">

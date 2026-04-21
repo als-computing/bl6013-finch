@@ -63,7 +63,7 @@ export default function InputField ({onSubmit=()=>{}, pv='', input={suffix: "Exa
     return (
         <li className="flex">
             {renderInput()}
-            <p className={`${isPVConnected ? 'text-sky-800' : 'text-red-400'} ml-6 overflow-auto text-nowrap`}>{currentValueText}</p>
+            <p className={`${isPVConnected ? 'text-sky-500' : 'text-red-400'} ml-6 overflow-auto text-nowrap`}>{currentValueText}</p>
         </li>
     )
 }

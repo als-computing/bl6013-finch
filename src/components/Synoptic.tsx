@@ -53,8 +53,8 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
     const renderDeviceCard = (device: SynopticDevice, index: number, isBeamline: boolean = false) => {
         const displayName = device.name;
         
-        // Check if any of the device's PVs are connected
-        const isAnyConnected = device.pvs.some(pv => ophydDevices[pv.pv]?.connected);
+        // Check if ALL of the device's PVs are connected (fully connected)
+        const isFullyConnected = device.pvs.length > 0 && device.pvs.every(pv => ophydDevices[pv.pv]?.connected);
         const isSelected = selectedDevice?.name === device.name;
         
         return (
@@ -62,54 +62,54 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                 key={`${device.name}-${index}`} 
                 onClick={() => handleCardClick(device)}
                 className={cn(
-                    "flex flex-col items-center p-3 h-72 rounded-lg border-2 transition-all duration-200 cursor-pointer hover:shadow-md",
+                    "flex flex-col items-center p-2 h-48 rounded-lg border-2 transition-all duration-200 cursor-pointer hover:shadow-md",
                     !allowWrap && "flex-shrink-0",
                     isSelected && "ring-2 ring-blue-400 scale-105",
                     !isSelected && "scale-100",
-                    isBeamline ? "min-w-60" : "min-w-48", // Beamline card is wider
-                    isAnyConnected 
-                        ? "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100"
-                        : "bg-gray-50 border-gray-200 text-gray-800 hover:bg-gray-100"
+                    isBeamline ? "min-w-40" : "min-w-32", // Beamline card is wider
+                    isFullyConnected 
+                        ? "bg-transparent border-sky-800 text-white hover:bg-sky-900"
+                        : "bg-transparent border-gray-200 text-slate-300 hover:bg-gray-100 opacity-60"
                 )}
             >
                 {/* Icon */}
                 {device.icon && (
-                    <div className="w-24 h-24 mb-2 flex items-center justify-center">
-                        {React.cloneElement(device.icon as React.ReactElement, { size: 72 })}
+                    <div className="w-16 h-16 mb-1 flex items-center justify-center">
+                        {React.cloneElement(device.icon as React.ReactElement, { size: 48 })}
                     </div>
                 )}
                 
                 {/* Device Name */}
-                <h3 className="text-lg font-semibold text-center mb-2">
+                <h3 className="text-xs font-semibold text-center mb-1">
                     {displayName}
                 </h3>
                 
                 {/* Group/Category */}
                 {device.group && (
-                    <span className="text-xs opacity-70 mb-2">
+                    <span className="text-xs opacity-70 mb-1">
                         {device.group}
                     </span>
                 )}
                 
                 {/* PV List - Scrollable */}
                 <div className="w-full flex-1 overflow-y-auto">
-                    <div className="space-y-1 max-h-32">
+                    <div className="space-y-0 max-h-20">
                         {device.pvs.map((pvConfig) => {
                             const ophydDevice = ophydDevices[pvConfig.pv];
                             const isConnected = ophydDevice?.connected || false;
                             const value = isConnected && ophydDevice?.value !== undefined ? ophydDevice.value : (isConnected ? 'N/A' : 'N/C');
-                            const units = ophydDevice?.units || '';
+                            const units = (ophydDevice?.units || '').slice(0, 3);
                             const pvDisplayName = pvConfig.nickname || pvConfig.pv;
                             
                             return (
                                 <div 
                                     key={pvConfig.pv}
-                                    className="flex justify-between items-center text-xs bg-white/30 rounded px-2 py-1"
+                                    className="flex justify-between items-center text-xs rounded px-1.5"
                                 >
-                                    <span className="font-medium">{pvDisplayName}</span>
-                                    <span className="font-mono font-bold">
-                                        {typeof value === 'number' ? value.toFixed(3) : value}
-                                        {units && typeof value === 'number' && <span className="ml-1">{units}</span>}
+                                    <span className="font-medium truncate flex-1 mr-1">{pvDisplayName}</span>
+                                    <span className="font-mono font-bold flex-shrink-0">
+                                        {typeof value === 'number' ? value.toFixed(2) : value}
+                                        {units && typeof value === 'number' && <span className="ml-0.5">{units}</span>}
                                     </span>
                                 </div>
                             );
@@ -130,22 +130,33 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                 {/* All Devices - Regular and Beamline mixed together */}
                 {devices.map((device, index) => {
                     // Check if we should show a connecting line to the next device (only for regular devices)
-                    const showConnectingLine = !device.isBeamline && index < devices.length - 1 && !devices[index + 1]?.isBeamline;
+                    const showConnectingLineRight = !device.isBeamline && index < devices.length - 1 && !devices[index + 1]?.isBeamline;
+                    // Check if we should show a connecting line to the left of beamline device (when previous device is regular)
+                    const showConnectingLineLeft = device.isBeamline && index > 0 && !devices[index - 1]?.isBeamline;
+                    
                     const nextDevice = devices[index + 1];
+                    const prevDevice = devices[index - 1];
                     
-                    const isAnyConnected = device.pvs.some(pv => ophydDevices[pv.pv]?.connected);
-                    const isNextConnected = nextDevice?.pvs.some(pv => ophydDevices[pv.pv]?.connected);
+                    const isFullyConnected = device.pvs.length > 0 && device.pvs.every(pv => ophydDevices[pv.pv]?.connected);
+                    const isNextFullyConnected = nextDevice && nextDevice.pvs.length > 0 && nextDevice.pvs.every(pv => ophydDevices[pv.pv]?.connected);
+                    const isPrevFullyConnected = prevDevice && prevDevice.pvs.length > 0 && prevDevice.pvs.every(pv => ophydDevices[pv.pv]?.connected);
                     
-                    // Line color: blue if both current and next devices are connected, gray otherwise
-                    const lineColor = isAnyConnected && isNextConnected ? 'bg-blue-400' : 'bg-gray-300';
+                    // Line color: sky if both connected devices are fully connected, gray otherwise
+                    const rightLineColor = isFullyConnected && isNextFullyConnected ? 'bg-sky-400' : 'bg-gray-300';
+                    const leftLineColor = isPrevFullyConnected && isFullyConnected ? 'bg-sky-400' : 'bg-gray-300';
                     
                     return (
                         <div key={`${device.name}-${index}`} className={cn("flex items-center", !allowWrap && "flex-shrink-0")}>
+                            {/* Connecting Line to the left (for beamline devices following regular devices) */}
+                            {showConnectingLineLeft && (
+                                <div className={cn("w-8 h-0.5 mx-2 transition-colors duration-200", leftLineColor)}></div>
+                            )}
+                            
                             {renderDeviceCard(device, index, device.isBeamline)}
                             
-                            {/* Connecting Line (only between regular devices) */}
-                            {showConnectingLine && (
-                                <div className={cn("w-8 h-0.5 mx-2 transition-colors duration-200", lineColor)}></div>
+                            {/* Connecting Line to the right (only between regular devices) */}
+                            {showConnectingLineRight && (
+                                <div className={cn("w-8 h-0.5 mx-2 transition-colors duration-200", rightLineColor)}></div>
                             )}
                         </div>
                     );
@@ -181,7 +192,7 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                                     const ophydDevice = ophydDevices[pv.pv];
                                     const isConnected = ophydDevice?.connected || false;
                                     const value = isConnected && ophydDevice?.value !== undefined ? ophydDevice.value : (isConnected ? 'N/A' : 'N/C');
-                                    const units = ophydDevice?.units || '';
+                                    const units = (ophydDevice?.units || '').slice(0, 3);
                                     
                                     return (
                                         <div key={pv.pv} className="p-3 bg-white rounded border">

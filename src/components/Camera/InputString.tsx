@@ -27,7 +27,7 @@ export default function InputString ({label='', onSubmit=(input)=>{console.log('
                 disabled={isDisabled}
                 type="text" 
                 value={value} 
-                className='w-1/2 border border-slate-200 pl-2' 
+                className='w-1/2 border border-slate-300 rounded-md pl-1 bg-sky-200 shadow-inner text-black' 
                 onKeyDown={handleKeyPress} 
                 onChange={handleChange}
             />

@@ -30,13 +30,13 @@ export default function InputInteger ({label='', onSubmit=(input)=>{console.log(
     };
 
     return (
-        <label className={`${isDisabled ? 'text-slate-400' : 'text-black'} w-full max-w-64 flex justify-between text-lg`}>
+        <label className={`${isDisabled ? 'text-slate-400' : 'text-white'} w-full max-w-64 flex justify-between text-lg`}>
             {label}
             <input
                 disabled={isDisabled}
                 type="text" 
                 value={value} 
-                className={`${isDisabled ? 'hover:cursor-not-allowed' : ''} w-1/2 border border-slate-300 pl-2`} 
+                className={`${isDisabled ? 'hover:cursor-not-allowed' : ''} w-1/2 border border-slate-300 rounded-md pl-1 bg-sky-200 shadow-inner text-black`} 
                 onKeyDown={handleKeyPress} 
                 onChange={handleChange}
             />

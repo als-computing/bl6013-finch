@@ -46,18 +46,18 @@ export default function InputEnum ({label='label', enums=['blank1','blank2'], on
     }, []);
 
     return (
-        <div ref={containerRef} className={`${isDisabled ? 'text-slate-400' : 'text-black'} flex w-full max-w-64`}>
+        <div ref={containerRef} className={`${isDisabled ? 'text-slate-400' : 'text-white'} flex w-full max-w-64 text-lg`}>
             <p className="w-1/2">{`${label} `}</p>
-            <div className={`${isDisabled ? 'hover:cursor-not-allowed' : ''} w-1/2 border border-slate-300 flex flex-col`} onClick={handleInputClick}>
-                <div className="flex w-full">
+            <div className={`${isDisabled ? 'hover:cursor-not-allowed' : ''} w-1/2 border border-slate-300 rounded-md flex flex-col bg-sky-200 shadow-inner`} onClick={handleInputClick}>
+                <div className="flex w-full ">
                     <div className="flex-grow">
-                        <p className='pl-2'>{selectedEnum}</p>
+                        <p className='pl-2 text-black'>{selectedEnum}</p>
                     </div>
-                    <div className="flex-shrink-0">{dropdownVisible ? tailwindIcons.chevronUp : tailwindIcons.chevronDown}</div>
+                    <div className="flex-shrink-0 text-black">{dropdownVisible ? tailwindIcons.chevronUp : tailwindIcons.chevronDown}</div>
                 </div>
                 <span className="relative w-full">
                     {dropdownVisible && (
-                        <ul className="z-10 absolute w-full top-0 bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-auto">
+                        <ul className="text-black z-10 absolute w-full top-0 bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-auto">
                             {enums
                                 .map((item) => (
                                     <li

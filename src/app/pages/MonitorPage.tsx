@@ -3,6 +3,7 @@ import Bento from "@/components/Bento";
 import Synoptic, { SynopticDevice } from "@/components/Synoptic";
 import TablePV, { TableColumn } from "@/components/TablePV";
 import CameraContainer from "@/components/Camera/CameraContainer";
+import MultiCameraSelect from "@/features/MultiCameraSelect";
 import { ScanOrStripchart } from "@/features/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer } from "@phosphor-icons/react";
 
@@ -140,7 +141,7 @@ export default function MonitorPage() {
     return (
        <Bento>
             {/* Synoptic Section - Full Width at Top */}
-            <Paper className="w-full h-fit text-slate-700 bg-sky-950" title="Synoptic View">
+            <Paper className="w-full h-fit text-slate-700 bg-sky-950">
                 <Synoptic devices={synopticDevices} allowWrap={true} />
             </Paper>
 
@@ -150,11 +151,11 @@ export default function MonitorPage() {
                 {/*Left Column */}
                 <div className="w-full xl:w-1/2 flex flex-col h-fit gap-8">
                     {/* All Devices */}
-                    <Paper className="flex-1 w-full bg-transparent">
+             
                         <div className="h-[calc(100%-4rem)] w-[calc(100%-4rem)] mx-auto flex flex-col">
-                            <TablePV columns={tablePVColumns} maxColumnHeight="calc(100% - 40px)" className="text-slate-700 max-w-fit p-2 bg-slate-100"/>
+                            <TablePV columns={tablePVColumns} maxColumnHeight="calc(100% - 30px)" className=""/>
                         </div>
-                    </Paper>
+               
 
                     {/* Strip Charts / Scan */}
                     <Paper className="flex-1 min-h-fit w-full text-slate-700">
@@ -168,14 +169,11 @@ export default function MonitorPage() {
                 </div>
 
                 {/* Right Column */}
-                <div className="w-full xl:w-1/2 h-fit">
+                <div className="w-full xl:w-fit h-fit">
                     {/* Detector Live View */}
-                    <Paper className="flex-1 text-slate-700 bg-transparent" >
-                        <div className="flex flex-col items-center justify-start">
-                            <CameraContainer prefix='13SIM1' enableControlPanel={true} enableSettings={true} canvasSize="medium"/>
-
-                        </div>
-                    </Paper>
+                    <div className="flex flex-col items-center justify-start min-h-[40rem] h-fit bg-sky-950 w-fit px-8 pb-4 rounded-md">
+                        <MultiCameraSelect detectors={[{ prefix: '13SIM1', nickname: 'Sim Detector' }, { prefix: 'fake:detector2', nickname: 'Reference Det' }]}/>
+                    </div>
                 </div>
             </div>
        </Bento>

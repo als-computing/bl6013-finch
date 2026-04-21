@@ -50,14 +50,16 @@ export default function CameraContainer(
         useCameraContainer({ prefix, settings, enableControlPanel, cameraControlWsUrl });
 
     return (
-        <div className="w-fit h-fit flex flex-wrap space-x-4 items-start justify-center">
+        <div className="h-full w-fit flex flex-wrap gap-4 items-start justify-center">
             <div className="flex flex-col flex-shrink-0 items-center">
                 <CameraCanvas imageArrayPV={imageArrayPV} canvasSize={canvasSize} sizePVs={sizePVs} prefix={prefix} wsUrl={cameraImageWsUrl}/>
                 { enableControlPanel ? <CameraControlPanel cameraControlPV={cameraControlPV} startAcquire={startAcquire} stopAcquire={stopAcquire}/> : ''}
             </div>
-            <div className='overflow-x-auto overflow-y-auto'>
-                {enableSettings ? <CameraSettings enableSettings={enableSettings} settings={settings} prefix={prefix} cameraSettingsPVs={devices} onSubmit={onSubmitSettings}/> : ''}
-            </div>
+            { enableSettings &&
+                <div className=''>
+                    <CameraSettings enableSettings={enableSettings} settings={settings} prefix={prefix} cameraSettingsPVs={devices} onSubmit={onSubmitSettings}/>
+                </div>
+            }
         </div>
     )
 }

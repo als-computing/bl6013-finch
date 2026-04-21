@@ -30,13 +30,13 @@ export default function InputFloat ({label='', onSubmit=(input)=>console.log('su
     };
 
     return (
-        <label className={`${isDisabled ? 'text-slate-400' : 'text-black'} w-full max-w-64 flex justify-between text-lg`}>
+        <label className={`${isDisabled ? 'text-slate-400' : 'text-white'} w-full max-w-64 flex justify-between text-lg`}>
             {label}
             <input
                 disabled={isDisabled}
                 type="number" 
                 value={value} 
-                className={`${isDisabled ? 'hover:cursor-not-allowed text-slate-400' : 'text-black'} w-1/2 border border-slate-300 pl-2`} 
+                className={`${isDisabled ? 'hover:cursor-not-allowed text-slate-400' : 'text-black'} w-1/2 border border-slate-300 rounded-md pl-1 bg-sky-200 shadow-inner`} 
                 onKeyDown={handleKeyPress} 
                 onChange={handleChange}
             />

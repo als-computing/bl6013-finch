@@ -15,9 +15,11 @@ type InputGroupProps = {
     /** Map of full PV names to live device objects forwarded to each `InputField`. */
     cameraSettingsPVs: Devices,
     /** Callback invoked when the user submits a new value for any PV in the group. */
-    onSubmit: (pv:string, value:string | boolean | number) => void
+    onSubmit: (pv:string, value:string | boolean | number) => void,
+    /** When `true`, hides the group title and expand/collapse functionality. Defaults to `false`. */
+    hideTitle?: boolean;
 }
-export default function InputGroup({settingsGroup, prefix='13SIM1', cameraSettingsPVs, onSubmit}: InputGroupProps) {
+export default function InputGroup({settingsGroup, prefix='13SIM1', cameraSettingsPVs, onSubmit, hideTitle = false}: InputGroupProps) {
     const [ isExpanded, setIsExpanded ] = useState(true);
 
     const handleHeadingClick = () => {
@@ -25,11 +27,13 @@ export default function InputGroup({settingsGroup, prefix='13SIM1', cameraSettin
     }
     return (
         <div className="mb-4">
-            <span onClick={handleHeadingClick} className="flex items-end space-x-2 border-b border-b-slate-300 w-fit px-1 hover:cursor-pointer hover:text-slate-600">
-                <h3 className="text-xl">{settingsGroup.title}</h3>
-                <div>{isExpanded ?  tailwindIcons.chevronUp : tailwindIcons.chevronDown}</div>
-            </span>
-            <ul className={`${isExpanded ? 'block' : 'hidden'} flex flex-col space-y-4 pl-4 pt-2`}>
+            {!hideTitle && (
+                <span onClick={handleHeadingClick} className="flex items-end space-x-2 border-b border-b-slate-300 w-fit px-1 hover:cursor-pointer hover:text-slate-600">
+                    <h3 className="text-xl">{settingsGroup.title}</h3>
+                    <div>{isExpanded ?  tailwindIcons.chevronUp : tailwindIcons.chevronDown}</div>
+                </span>
+            )}
+            <ul className={`${hideTitle || isExpanded ? 'block' : 'hidden'} flex flex-col space-y-4 pl-4 pt-2`}>
                 {settingsGroup.inputs.map((input) => 
                     <InputField
                         pv={`${prefix}:${settingsGroup.prefix !== null ? settingsGroup.prefix + ':' : ''}${input.suffix}`} 
