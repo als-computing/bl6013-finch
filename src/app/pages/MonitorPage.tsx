@@ -4,7 +4,7 @@ import Synoptic, { SynopticDevice } from "@/components/Synoptic";
 import TablePV, { TableColumn } from "@/components/TablePV";
 import CameraContainer from "@/components/Camera/CameraContainer";
 import MultiCameraSelect from "@/features/MultiCameraSelect";
-import { ScanOrStripchart } from "@/features/ScanOrStripchart";
+import ScanOrStripchart from "@/features/ScanOrStripchart/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer } from "@phosphor-icons/react";
 
 export default function MonitorPage() {

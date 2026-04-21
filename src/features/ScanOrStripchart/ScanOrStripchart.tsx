@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Scan from '@/components/Scan';
 import Stripchart from '@/components/Stripchart';
+import { Microscope, ChartScatter } from '@phosphor-icons/react';
 
 type ViewMode = 'scan' | 'stripchart';
 
@@ -27,37 +28,32 @@ export default function ScanOrStripchart({
     const [viewMode, setViewMode] = useState<ViewMode>('scan');
 
     return (
-        <div className={`h-full flex flex-col text-gray-800 ${className}`}>
-            {/* Header with Radio Button Selection */}
-            <div className="flex items-center gap-6 p-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-semibold text-gray-800">Data Visualization</h2>
+        <div className={`h-full flex flex-col bg-sky-950 ${className}`}>
+            {/* Header with Tab Selection */}
+            <div className="flex items-center justify-center gap-24 p-3">
+                <button
+                    onClick={() => setViewMode('scan')}
+                    className={`flex items-center gap-2 cursor-pointer transition-colors pb-1 ${
+                        viewMode === 'scan'
+                            ? 'text-white font-bold border-b-2 border-white'
+                            : 'text-gray-400 font-normal hover:text-gray-300 border-b-2 border-transparent'
+                    }`}
+                >
+                    <Microscope size={24} />
+                    <span>Scan</span>
+                </button>
                 
-                {/* Radio Button Group */}
-                <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="viewMode"
-                            value="scan"
-                            checked={viewMode === 'scan'}
-                            onChange={(e) => setViewMode(e.target.value as ViewMode)}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                        />
-                        <span className="text-sm font-medium text-gray-700">Scan</span>
-                    </label>
-                    
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="viewMode"
-                            value="stripchart"
-                            checked={viewMode === 'stripchart'}
-                            onChange={(e) => setViewMode(e.target.value as ViewMode)}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                        />
-                        <span className="text-sm font-medium text-gray-700">Strip Chart</span>
-                    </label>
-                </div>
+                <button
+                    onClick={() => setViewMode('stripchart')}
+                    className={`flex items-center gap-2 cursor-pointer transition-colors pb-1 ${
+                        viewMode === 'stripchart'
+                            ? 'text-white font-bold border-b-2 border-white'
+                            : 'text-gray-400 font-normal hover:text-gray-300 border-b-2 border-transparent'
+                    }`}
+                >
+                    <ChartScatter size={24} />
+                    <span>Strip Chart</span>
+                </button>
             </div>
             
             {/* Content Area */}
