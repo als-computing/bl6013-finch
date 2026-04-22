@@ -33,6 +33,30 @@
     scrollbar-color: #cbd5e1 #f8fafc; /* Thumb color and track color */
 }
 
+/* When you have a dark background and don't want the scrollbar track to have so much contrast due to the default white track */
+.transparent-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transparent-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Makes the track/container transparent */
+}
+
+.transparent-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5); /* Semi-transparent gray thumb */
+  border-radius: 4px;
+}
+
+.transparent-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.8); /* Darker on hover */
+}
+
+/* For Firefox */
+.transparent-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
 .main-container {
     display: grid;
     height: 100vh;

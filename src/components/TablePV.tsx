@@ -1,6 +1,7 @@
 import React from 'react';
 import useOphydPVSocket from '@/api/ophyd/useOphydPVSocket';
 import { Gear, Camera } from "@phosphor-icons/react";
+import './style.css';
 import { cn } from '@/lib/utils';
 
 export interface TablePV {
@@ -59,7 +60,7 @@ export default function TablePV({
     };
 
     return (
-        <div className={cn("text-white bg-sky-950 rounded-lg overflow-x-auto p-4", className)}>
+        <div className={cn("text-white bg-sky-950 rounded-lg overflow-x-auto p-4 transparent-scrollbar", className)}>
             {/* Table Container */}
             <div className="  m-auto w-fit">
                 <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(180px, 200px))` }}>
