@@ -20,6 +20,20 @@ export type PlotlyScatterProps = {
   xAxisLayout?: Partial<LayoutAxis>;
   /** Additional Plotly yaxis layout overrides merged on top of defaults. */
   yAxisLayout?: Partial<LayoutAxis>;
+  /** Background color for the plot area. */
+  plotBgColor?: string;
+  /** Background color for the entire plot paper/canvas. */
+  paperBgColor?: string;
+  /** Color of the grid lines. */
+  gridColor?: string;
+  /** Color of the zero lines (if they exist). */
+  zeroLineColor?: string;
+  /** Color of the tick labels on axes. */
+  tickLabelColor?: string;
+  /** Color of the axis titles. */
+  axisTitleColor?: string;
+  /** Color of the plot title. */
+  plotTitleColor?: string;
   /** Additional CSS classes applied to the root container div. */
   className?: string;
 };
@@ -48,6 +62,13 @@ const PlotlyScatter = React.memo(function PlotlyScatter({
   yAxisRange,
   xAxisLayout,
   yAxisLayout,
+  plotBgColor,
+  paperBgColor,
+  gridColor,
+  zeroLineColor,
+  tickLabelColor,
+  axisTitleColor,
+  plotTitleColor,
   className,
   ...props
 }: PlotlyScatterProps) {
@@ -73,22 +94,40 @@ const PlotlyScatter = React.memo(function PlotlyScatter({
       <Plot
         data={data}
         layout={{
-          title: title,
-          plot_bgcolor: '#E2E8F0',
-          paper_bgcolor: '#E2E8F0',
+          title: {
+            text: title,
+            font: { 
+              size: 16,
+              color: plotTitleColor || '#082f49'
+            }
+          },
+          plot_bgcolor: plotBgColor || '#E2E8F0',
+          paper_bgcolor: paperBgColor || '#E2E8F0',
           xaxis: { 
             title: {
               text: xAxisTitle,
-              font: titleFont
+              font: {
+                size: 16,
+                color: axisTitleColor || '#082f49'
+              }
             },
+            gridcolor: gridColor || '#d1d5db',
+            zerolinecolor: zeroLineColor || '#6b7280',
+            tickfont: { color: tickLabelColor || '#6b7280' },
             range: xAxisRange ? xAxisRange : undefined,
             ...xAxisLayout,
           },
           yaxis: { 
             title: {
               text: yAxisTitle,
-              font: titleFont
+              font: {
+                size: 16,
+                color: axisTitleColor || '#082f49'
+              }
             },
+            gridcolor: gridColor || '#d1d5db',
+            zerolinecolor: zeroLineColor || '#6b7280',
+            tickfont: { color: tickLabelColor || '#6b7280' },
             range: yAxisRange ? yAxisRange : undefined, 
             ...yAxisLayout,
           },

@@ -53,14 +53,6 @@ export default function MonitorPage() {
             ]
         },
         {
-            name: 'Rotation 8',
-            icon: <ArrowsClockwise size={24} />,
-            group: 'Rotation',
-            pvs: [
-                { pv: 'IOC:m8' }
-            ]
-        },
-        {
             name: 'Fake Device',
             icon: <Circle size={24} />,
             group: 'Test',

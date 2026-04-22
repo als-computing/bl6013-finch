@@ -54,7 +54,7 @@ type QSConsoleProps = WidgetStyleProps & {
 }
 export default function QSConsole({ 
     processConsoleMessage = () => {}, 
-    darkMode = true, 
+    darkMode = false, 
     classNameTextRow, 
     hideTimestamp = false,
     // Theme override props

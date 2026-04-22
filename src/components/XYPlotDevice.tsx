@@ -141,7 +141,10 @@ export default function XYPlotDevice({
                     data={[plotData]}
                     xAxisTitle={xLabel}
                     yAxisTitle={yLabel}
-                    className="h-full w-full"
+                    className="h-full w-full "
+                    plotBgColor="#142E48"
+                    paperBgColor="#142E48"
+                    axisTitleColor='#E2E8F0'
                 />
                 
                 {/* Data point counter and clear button */}

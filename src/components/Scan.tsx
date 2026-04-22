@@ -4,7 +4,7 @@ import { useDevicesAllowedQuery } from '@/api/qServer/hooks';
 import XYPlotDevice from '@/components/XYPlotDevice';
 import QSConsole from './QServer/QSConsole';
 import ExperimentExecutePlanButtonGeneric from '@/components/Experiment/ExperimentExecutePlanButtonGeneric';
-import { Eraser, StopCircle } from '@phosphor-icons/react';
+import { Eraser, StopCircle, PersonSimpleRun, BookOpenText, BracketsCurly, Steps, PlayCircle } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 export interface ScanProps {
@@ -139,171 +139,153 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
 
     return (
         <div className={cn("h-full p-4 space-y-4 overflow-auto text-gray-800 bg-sky-950", className)}>
-            {/* Top Row - Motor and Signal Selection */}
-            <div className="flex gap-8">
-                {/* Motor Section */}
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-white min-w-fit">Motor:</label>
-                        <select
-                            value={selectedMotor}
-                            onChange={(e) => setSelectedMotor(e.target.value)}
-                            disabled={isScanning}
-                            className={cn("w-48", inputStyles)}
-                        >
-                            <option value="">Select Motor</option>
-                            {availableDevices.motors.map((device) => (
-                                <option key={device} value={device}>
-                                    {device}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex items-center justify-start pl-14">
-                        <span className="text-xs font-mono text-gray-300">
-                            {motorDevice?.connected && typeof motorDevice.value === 'number' 
-                                ? motorDevice.value.toFixed(3) 
-                                : 'N/C'
-                            }
-                            {motorDevice?.units && typeof motorDevice.value === 'number' && (
-                                <span className="text-xs ml-1">{motorDevice.units}</span>
-                            )}
-                        </span>
-                    </div>
-                </div>
+            <div className="flex flex-wrap gap-4 items-center justify-center">
+                <div className="flex flex-col min-w-fit w-fit flex-shrink-0">
+                    {/* Scan Configuration - Four Row Structure with Icons */}
+                    <div className="space-y-3">
+                        {/* Row 1: Motor Selection */}
+                        <div className="flex items-center gap-2">
+                            <PersonSimpleRun size={20} className="text-white" />
+                            <label className="text-sm font-medium text-white min-w-20">Run Motor:</label>
+                            <select
+                                value={selectedMotor}
+                                onChange={(e) => setSelectedMotor(e.target.value)}
+                                disabled={isScanning}
+                                className={cn("w-48", inputStyles)}
+                            >
+                                <option value="">Select Motor</option>
+                                {availableDevices.motors.map((device) => (
+                                    <option key={device} value={device}>
+                                        {device}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="text-xs font-mono text-gray-300 ml-2">
+                                {motorDevice?.connected && typeof motorDevice.value === 'number' 
+                                    ? motorDevice.value.toFixed(3) 
+                                    : 'N/C'
+                                }
+                                {motorDevice?.units && typeof motorDevice.value === 'number' && (
+                                    <span className="text-xs ml-1">{motorDevice.units}</span>
+                                )}
+                            </span>
+                        </div>
 
-                {/* Signal Section */}
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-white min-w-fit">Signal:</label>
-                        <select
-                            value={selectedSignal}
-                            onChange={(e) => setSelectedSignal(e.target.value)}
-                            disabled={isScanning}
-                            className={cn("w-48", inputStyles)}
-                        >
-                            <option value="">Select Signal</option>
-                            {availableDevices.signals.map((device) => (
-                                <option key={device} value={device}>
-                                    {device}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex items-center justify-start pl-14">
-                        <span className="text-xs font-mono text-gray-300">
-                            {signalDevice?.connected && typeof signalDevice.value === 'number' 
-                                ? signalDevice.value.toFixed(3) 
-                                : 'N/C'
-                            }
-                            {signalDevice?.units && typeof signalDevice.value === 'number' && (
-                                <span className="text-xs ml-1">{signalDevice.units}</span>
-                            )}
-                        </span>
-                    </div>
-                </div>
-            </div>
+                        {/* Row 2: Signal Selection */}
+                        <div className="flex items-center gap-2">
+                            <BookOpenText size={20} className="text-white" />
+                            <label className="text-sm font-medium text-white min-w-20">Read Signal:</label>
+                            <select
+                                value={selectedSignal}
+                                onChange={(e) => setSelectedSignal(e.target.value)}
+                                disabled={isScanning}
+                                className={cn("w-48", inputStyles)}
+                            >
+                                <option value="">Select Signal</option>
+                                {availableDevices.signals.map((device) => (
+                                    <option key={device} value={device}>
+                                        {device}
+                                    </option>
+                                ))}
+                            </select>
+                            <span className="text-xs font-mono text-gray-300 ml-2">
+                                {signalDevice?.connected && typeof signalDevice.value === 'number' 
+                                    ? signalDevice.value.toFixed(3) 
+                                    : 'N/C'
+                                }
+                                {signalDevice?.units && typeof signalDevice.value === 'number' && (
+                                    <span className="text-xs ml-1">{signalDevice.units}</span>
+                                )}
+                            </span>
+                        </div>
 
-            {/* Scan Parameters Row */}
-            <div className="flex items-center gap-4 p-2">
-                <label className="text-sm font-medium text-white">Start:</label>
-                <input
-                    type="number"
-                    value={scanStart}
-                    onChange={(e) => setScanStart(parseFloat(e.target.value) || 0)}
-                    disabled={isScanning}
-                    className={cn("w-24", inputStyles)}
-                />
-                
-                <label className="text-sm font-medium text-white">Stop:</label>
-                <input
-                    type="number"
-                    value={scanStop}
-                    onChange={(e) => setScanStop(parseFloat(e.target.value) || 0)}
-                    disabled={isScanning}
-                    className={cn("w-24", inputStyles)}
-                />
-                
-                <label className="text-sm font-medium text-white">Step:</label>
-                <input
-                    type="number"
-                    value={scanStep}
-                    onChange={(e) => setScanStep(parseFloat(e.target.value) || 0.1)}
-                    step="0.1"
-                    disabled={isScanning}
-                    className={cn("w-16", inputStyles)}
-                />
-            </div>
+                        {/* Row 3: Range Parameters */}
+                        <div className="flex items-center gap-2">
+                            <BracketsCurly size={20} className="text-white" />
+                            <label className="text-sm font-medium text-white min-w-20">Range:</label>
+                            <input
+                                type="number"
+                                value={scanStart}
+                                onChange={(e) => setScanStart(parseFloat(e.target.value) || 0)}
+                                disabled={isScanning}
+                                className={cn("w-24", inputStyles)}
+                            />
+                            <span className="text-white text-sm mx-2">to</span>
+                            <input
+                                type="number"
+                                value={scanStop}
+                                onChange={(e) => setScanStop(parseFloat(e.target.value) || 0)}
+                                disabled={isScanning}
+                                className={cn("w-24", inputStyles)}
+                            />
+                        </div>
 
-            {/* Control Buttons Row */}
-            <div className="flex items-center gap-4 p-1">
-                <ExperimentExecutePlanButtonGeneric
-                    planName="scan"
-                    kwargs={scanKwargs}
-                    disabled={!selectedMotor || !selectedSignal || !motorDevice?.connected || !signalDevice?.connected || scanStep <= 0}
-                    className="px-6 py-2  disabled:bg-gray-400 text-white text-sm font-medium rounded-md transition-colors"
-                    onSuccess={handleScanSuccess}
-                    onError={handleScanError}
-                />
-                
-                {/* Scan Info */}
-                <div className="text-sm text-gray-300">
-                    {numSteps > 1 && (
-                        <span>({numSteps} points)</span>
+                        {/* Row 4: Step Parameter */}
+                        <div className="flex items-center gap-2">
+                            <Steps size={20} className="text-white" />
+                            <label className="text-sm font-medium text-white min-w-20">Step Size:</label>
+                            <input
+                                type="number"
+                                value={scanStep}
+                                onChange={(e) => setScanStep(parseFloat(e.target.value) || 0.1)}
+                                step="0.1"
+                                disabled={isScanning}
+                                className={cn("w-24", inputStyles)}
+                            />
+                            <div className="text-sm text-gray-300 ml-2">
+                                {numSteps > 1 && (
+                                    <span>({numSteps} steps total)</span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Centered Execute Button */}
+                    <div className="flex justify-center p-1 pt-8">
+                        <ExperimentExecutePlanButtonGeneric
+                            planName="scan"
+                            kwargs={scanKwargs}
+                            disabled={!selectedMotor || !selectedSignal || !motorDevice?.connected || !signalDevice?.connected || scanStep <= 0}
+                            className="px-6 py-2 disabled:bg-gray-400 text-white text-sm font-medium rounded-md transition-colors"
+                            onSuccess={handleScanSuccess}
+                            onError={handleScanError}
+                        />
+                    </div>
+
+                    {/* Error Message Display */}
+                    {errorMessage && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-red-600 text-sm">⚠️ Scan Error:</span>
+                                    <span className="text-red-700 text-sm">{errorMessage}</span>
+                                </div>
+                                <button
+                                    onClick={() => setErrorMessage('')}
+                                    className="text-red-500 hover:text-red-700 text-sm px-2"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
-                
-                {/* Divider */}
-                <div className="h-8 w-px bg-gray-300"></div>
-                
-                {/* Plot Control Buttons */}
-                <button
-                    onClick={handleClearPlots}
-                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
-                >
-                    <Eraser size={24} />
-                    Clear
-                </button>
-                <button
-                    onClick={handleTogglePlots}
-                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
-                >
-                    {plotsEnabled && <StopCircle size={24} />}
-                    {plotsEnabled ? 'Stop' : 'Resume'}
-                </button>
-            </div>
 
-            {/* Error Message Display */}
-            {errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <span className="text-red-600 text-sm">⚠️ Scan Error:</span>
-                            <span className="text-red-700 text-sm">{errorMessage}</span>
-                        </div>
-                        <button
-                            onClick={() => setErrorMessage('')}
-                            className="text-red-500 hover:text-red-700 text-sm px-2"
-                        >
-                            ✕
-                        </button>
-                    </div>
+                <div className="h-52 flex-grow min-w-96">
+                    <QSConsole 
+                        processConsoleMessage={()=>{}} 
+                        classNameTextRow="text-xs" 
+                        hideTimestamp={true} 
+                        darkMode={true}
+                        classNameMessageText='text-slate-400'
+                        classNameMainBg='bg-sky-950 border border-gray-700'
+                />
                 </div>
-            )}
-
-            <div className="h-48 w-full">
-                <QSConsole 
-                    processConsoleMessage={()=>{}} 
-                    classNameTextRow="text-xs" 
-                    hideTimestamp={true} 
-                    darkMode={true}
-                    classNameMessageText='text-slate-400'
-                    classNameMainBg='bg-slate-900'
-            />
             </div>
+
 
             {/* Motor vs Signal XY Plot */}
-            <div className="h-[400px] rounded-lg p-4">
+            <div className="h-96 rounded-lg p-4">
                 {selectedMotor && selectedSignal && motorDevice && signalDevice ? (
                     <XYPlotDevice
                         key={`scan-xy-${plotKey}`}
@@ -324,6 +306,26 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
                         </p>
                     </div>
                 )}
+            </div>
+            
+            {/* Plot Control Buttons - Below Plot */}
+            <div className="flex justify-center items-center gap-16">
+                <button
+                    onClick={handleClearPlots}
+                    title="Clear data from plot"
+                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
+                >
+                    <Eraser size={24} />
+                    Clear
+                </button>
+                <button
+                    onClick={handleTogglePlots}
+                    title="Stop/resume the plot from receiving new data points"
+                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
+                >
+                    {plotsEnabled ? <StopCircle size={24} /> : <PlayCircle size={24} />}
+                    {plotsEnabled ? 'Stop' : 'Resume'}
+                </button>
             </div>
         </div>
     );
