@@ -55,8 +55,8 @@ export default function Button({
             cn(
             `
                 rounded-xl  font-medium w-fit
-                ${isSecondary ? `bg-transparent hover:bg-slate-100 text-black border` : `bg-sky-500 text-white`}
-                ${disabled ? 'hover:cursor-not-allowed' : `${(isSecondary ? `secondaryHoverBgColor` : 'hover:bg-sky-600')} hover:cursor-pointer`} 
+                ${isSecondary ? `bg-transparent hover:bg-slate-100 text-black border` : `bg-sky-600 text-white`}
+                ${disabled ? 'hover:cursor-not-allowed' : `${(isSecondary ? `secondaryHoverBgColor` : 'hover:bg-sky-500')} hover:cursor-pointer`} 
                 ${textSizes[size]} 
                 ${paddingSizes[size]} 
             `,

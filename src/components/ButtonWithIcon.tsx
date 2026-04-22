@@ -77,7 +77,7 @@ export default function ButtonWithIcon({
         <button 
             disabled={disabled} 
             className={cn(`
-                ${isSecondary ? `bg-white/50 hover:bg-slate-200 text-black border` : `bg-sky-500 hover:bg-sky-600 text-white`}
+                ${isSecondary ? `bg-white/50 hover:bg-slate-200 text-black border` : `bg-sky-600 hover:bg-sky-500 text-white`}
                 ${disabled && 'hover:cursor-not-allowed'} 
                 ${textSizes[size]} 
                 ${paddingSizes[size]} 

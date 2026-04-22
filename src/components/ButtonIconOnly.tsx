@@ -19,7 +19,7 @@ export default function ButtonIconOnly({ icon, className, classNameIcon, onClick
         if (onClick) onClick(e);
     };
     return (
-        <button className={cn(`${isSecondary ? 'bg-white border-slate-300 border hover:bg-slate-100' : 'bg-sky-500 hover:bg-sky-600'} rounded-sm px-2 py-1`, className)} onClick={handleClick} disabled={disabled} {...props}>
+        <button className={cn(`${isSecondary ? 'bg-white border-slate-300 border hover:bg-slate-100' : 'bg-sky-600 hover:bg-sky-500'} rounded-sm px-2 py-1`, className)} onClick={handleClick} disabled={disabled} {...props}>
             <span className={cn(`${isSecondary ? 'text-black' : 'text-white'} `, classNameIcon)}>{icon}</span>
         </button>
     )
