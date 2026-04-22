@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { WidgetStyleProps } from './Widget';
 import { useOphydApiUrls } from 'src/utils/apiUtils';
 import './styles/qserver.css';
+import '../style.css';
+import { cn } from '@/lib/utils';
 
 import dayjs from 'dayjs';
 
@@ -13,11 +15,87 @@ type ConsoleMessage = {
     id: number;
 };
 
-type QSConsoleProps = WidgetStyleProps &{
-
-    processConsoleMessage: (message: string) => void
+type QSConsoleProps = WidgetStyleProps & {
+    processConsoleMessage: (message: string) => void;
+    /** Whether to use dark mode styling (default: false for light mode) */
+    darkMode?: boolean;
+    /** Style applied to each row containing console message */
+    classNameTextRow?: string;
+    /** Hide the timestamp at the right of each console message */
+    hideTimestamp?: boolean;
+    
+    // Theme override props - these take precedence over dark/light mode defaults
+    /** Main container background */
+    classNameMainBg?: string;
+    /** Toggle OFF text color */
+    classNameToggleOffText?: string;
+    /** Toggle ON text color */
+    classNameToggleOnText?: string;
+    /** Toggle inactive text color */
+    classNameToggleInactiveText?: string;
+    /** Status message text color */
+    classNameStatusText?: string;
+    /** Toggle switch active background */
+    classNameToggleActiveBg?: string;
+    /** Toggle switch inactive background */
+    classNameToggleInactiveBg?: string;
+    /** Toggle switch knob background */
+    classNameToggleKnobBg?: string;
+    /** Connection status text color */
+    classNameConnectionText?: string;
+    /** Waiting message text color */
+    classNameWaitingText?: string;
+    /** Console message text color */
+    classNameMessageText?: string;
+    /** Message number text color */
+    classNameMessageNumberText?: string;
+    /** Timestamp text color */
+    classNameTimestampText?: string;
 }
-export default function QSConsole({ processConsoleMessage=() =>{} }: QSConsoleProps) {
+export default function QSConsole({ 
+    processConsoleMessage = () => {}, 
+    darkMode = true, 
+    classNameTextRow, 
+    hideTimestamp = false,
+    // Theme override props
+    classNameMainBg,
+    classNameToggleOffText,
+    classNameToggleOnText,
+    classNameToggleInactiveText,
+    classNameStatusText,
+    classNameToggleActiveBg,
+    classNameToggleInactiveBg,
+    classNameToggleKnobBg,
+    classNameConnectionText,
+    classNameWaitingText,
+    classNameMessageText,
+    classNameMessageNumberText,
+    classNameTimestampText
+}: QSConsoleProps) {
+
+    // Color theme variables - props override dark/light mode defaults
+    const theme = {
+        // Main container
+        mainBg: classNameMainBg || (darkMode ? 'bg-black' : 'bg-white'),
+        
+        // Toggle switch and status
+        toggleOffText: classNameToggleOffText || (darkMode ? 'text-gray-300' : 'text-gray-800'),
+        toggleOnText: classNameToggleOnText || (darkMode ? 'text-green-400' : 'text-green-600'),
+        toggleInactiveText: classNameToggleInactiveText || (darkMode ? 'text-gray-500' : 'text-gray-400'),
+        statusText: classNameStatusText || (darkMode ? 'text-gray-300' : 'text-slate-500'),
+        
+        // Toggle switch background
+        toggleActiveBg: classNameToggleActiveBg || (darkMode ? 'bg-green-500' : 'bg-green-600'),
+        toggleInactiveBg: classNameToggleInactiveBg || 'bg-gray-300',
+        toggleKnobBg: classNameToggleKnobBg || 'bg-white',
+        
+        // Console messages
+        connectionText: classNameConnectionText || (darkMode ? 'text-gray-300' : 'text-slate-400'),
+        waitingText: classNameWaitingText || (darkMode ? 'text-gray-400' : 'text-white'),
+        messageText: classNameMessageText || (darkMode ? 'text-gray-200' : 'text-slate-600'),
+        messageNumberText: classNameMessageNumberText || (darkMode ? 'text-gray-400' : 'text-slate-500'),
+        timestampText: classNameTimestampText || (darkMode ? 'text-blue-400' : 'text-sky-600'),
+    };
 
     
     const [ wsMessages, setWsMessages ] = useState<ConsoleMessage[]>([]); //text for the websocket output
@@ -182,40 +260,39 @@ export default function QSConsole({ processConsoleMessage=() =>{} }: QSConsolePr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    
     return (
-        <main className="h-full bg-white rounded-b-lg relative">
+        <main className={`h-full rounded-lg relative ${theme.mainBg}`}>
             {/* Toggle Switch & Status Header */}
-            <div  className="flex items-start justify-start space-x-12 pl-12 pt-1 absolute top-0 z-10">
+            <div  className="flex items-start justify-start space-x-12 pl-12 pt-1 absolute top-0 z-10 rounded-t-lg">
                 <div className="flex w-fit items-center space-x-2">
-                    <p className={`${isToggleOn ? 'text-gray-400' : 'text-gray-800'}`}>OFF</p>
+                    <p className={isToggleOn ? theme.toggleInactiveText : theme.toggleOffText}>OFF</p>
                     <button
                         onClick={toggleSwitch}
-                        className={`w-16 h-5 flex items-center bg-gray-300 rounded-full px-1 cursor-pointer ${
-                            isToggleOn ? 'bg-green-600' : 'bg-gray-300'
+                        className={`w-16 h-5 flex items-center rounded-full px-1 cursor-pointer ${
+                            isToggleOn ? theme.toggleActiveBg : theme.toggleInactiveBg
                         }`}
                         >
                         <div
-                            className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                            className={`${theme.toggleKnobBg} w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
                                 isToggleOn ? 'translate-x-10' : 'translate-x-0'
                             }`}
                         ></div>
                     </button>
-                    <p className={`${isToggleOn ? 'text-green-600' : 'text-gray-400'}`}>ON</p>
+                    <p className={isToggleOn ? theme.toggleOnText : theme.toggleInactiveText}>ON</p>
                 </div>
-                <p className="text-slate-500">{statusMessage}</p>
+                <p className={theme.statusText}>{statusMessage}</p>
             </div>
             {/* Main Body */}
-            <div className="h-full w-full rounded-b-lg absolute top-0 pt-8">
-                <section ref={messageContainerRef} className="overflow-auto h-full w-full rounded-b-lg scrollbar-always-visible" >
-                    {isOpened ? <p className="text-slate-400 pl-4">Connection Opened. Listening for Queue Server console output.</p> : <p className="animate-pulse text-white pl-4">Waiting for initialization...</p>}
+            <div className="h-full w-full absolute top-0 pt-8">
+                <section ref={messageContainerRef} className="overflow-auto h-full w-full rounded-b-lg scrollbar-always-visible transparent-scrollbar" >
+                    {isOpened ? <p className={`${theme.connectionText} pl-4`}>Connection Opened. Listening for Queue Server console output.</p> : <p className={`animate-pulse ${theme.waitingText} pl-4`}>Waiting for initialization...</p>}
                     <ul className="flex flex-col">
                         {wsMessages.map((msg) => {
                             return (
-                                <li key={msg.id} className="w-full flex text-slate-600">
-                                    <p className="w-1/12 text-center text-slate-500"> {msg.id} </p>
-                                    <p className="w-9/12">{msg.mainText}</p>
-                                    <p className="w-1/6 text-sky-600 text-center">{msg.time}</p>
+                                <li key={msg.id} className={cn(`w-full flex ${theme.messageText}`, classNameTextRow)}>
+                                    <p className={`w-fit text-center flex-shrink-0 pl-2 pr-4 ${theme.messageNumberText}`}> {msg.id} </p>
+                                    <p className="flex-grow">{msg.mainText}</p>
+                                    {!hideTimestamp && <p className={`w-fit flex-shrink-0 pr-2 ${theme.timestampText} text-center`}>{msg.time}</p>}
                                 </li>
                             )
                         })}

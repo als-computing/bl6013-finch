@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import useOphydDeviceSocket from '@/api/ophyd/useOphydDeviceSocket';
 import { useDevicesAllowedQuery } from '@/api/qServer/hooks';
 import XYPlotDevice from '@/components/XYPlotDevice';
+import QSConsole from './QServer/QSConsole';
 import ExperimentExecutePlanButtonGeneric from '@/components/Experiment/ExperimentExecutePlanButtonGeneric';
 import { Eraser, StopCircle } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
@@ -289,6 +290,17 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
                     </div>
                 </div>
             )}
+
+            <div className="h-48 w-full">
+                <QSConsole 
+                    processConsoleMessage={()=>{}} 
+                    classNameTextRow="text-xs" 
+                    hideTimestamp={true} 
+                    darkMode={true}
+                    classNameMessageText='text-slate-400'
+                    classNameMainBg='bg-slate-900'
+            />
+            </div>
 
             {/* Motor vs Signal XY Plot */}
             <div className="h-[400px] rounded-lg p-4">
