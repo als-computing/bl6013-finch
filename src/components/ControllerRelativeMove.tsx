@@ -2,7 +2,8 @@ import { useState} from "react";
 
 import InputNumber from "./InputNumber";
 import { cn } from "@/lib/utils";
-import { ArrowCircleRight, ArrowCircleLeft } from "@phosphor-icons/react";
+import { Play } from "@phosphor-icons/react";
+import ButtonIconOnly from "./ButtonIconOnly";
 export type ControllerRelativeMoveProps = {
     /** Called when the user clicks a direction arrow. Receives the computed target value (currentValue ± increment), or null if either value is unset. */
     handleEnter?: (input: number | null) => void;
@@ -18,8 +19,10 @@ export type ControllerRelativeMoveProps = {
     currentValue: number | null;
     /** Disables interaction and applies dimmed styling when true. */
     locked?: boolean;
+    /** When true, renders the computed subtraction/addition result text flanking the controls. Defaults to false. */
+    showResultantText?: boolean;
 }
-export default function ControllerRelativeMove({handleEnter, inputLabel, classNameInput, className, currentValue, resultantTextClassName, locked, ...props}: ControllerRelativeMoveProps) {
+export default function ControllerRelativeMove({handleEnter, inputLabel, classNameInput, className, currentValue, resultantTextClassName, locked, showResultantText = false, ...props}: ControllerRelativeMoveProps) {
     const [ inputValue, setInputValue ] = useState<number | null>(null);
     const resultantAddition = currentValue !== null && inputValue !== null ? currentValue + inputValue : null;
     const resultantSubtraction = currentValue !== null && inputValue !== null ? currentValue - inputValue : null;
@@ -36,11 +39,23 @@ export default function ControllerRelativeMove({handleEnter, inputLabel, classNa
             )}
             {...props}
         >
-            <p className={cn("font-extralight w-24 text-right", resultantTextClassName)}>{subtractionText}</p>
-            <ArrowCircleLeft size={24} className="hover:text-sky-500 hover:cursor-pointer" onClick={()=>handleEnter && handleEnter(resultantSubtraction)} />
-            <InputNumber disabled={locked} className={cn(`w-24 text-center`)} onChange={(input) => setInputValue(input)} classNameInput={cn("text-center", classNameInput)}/>
-            <ArrowCircleRight size={24} className="hover:text-sky-500 hover:cursor-pointer" onClick={()=>handleEnter && handleEnter(resultantAddition)}/>
-            <p className={cn("font-extralight w-24 text-left", resultantTextClassName)}>{additionText}</p>
+            {showResultantText && <p className={cn("font-extralight w-24 text-right", resultantTextClassName)}>{subtractionText}</p>}
+            {/* <ArrowCircleLeft size={24} className="hover:text-sky-500 hover:cursor-pointer" onClick={()=>handleEnter && handleEnter(resultantSubtraction)} /> */}
+            <ButtonIconOnly
+                icon={<Play size={20} className="rotate-180"/>}
+                onClick={() => handleEnter && handleEnter(resultantSubtraction)}
+                disabled={locked}
+                className="px-2"
+            />
+            <InputNumber disabled={locked} className={cn(`w-20 text-center`)} onChange={(input) => setInputValue(input)} classNameInput={cn("text-center", classNameInput)}/>
+            {/* <ArrowCircleRight size={24} className="hover:text-sky-500 hover:cursor-pointer" onClick={()=>handleEnter && handleEnter(resultantAddition)}/> */}
+            <ButtonIconOnly
+                icon={<Play size={20}/>}
+                onClick={() => handleEnter && handleEnter(resultantAddition)}
+                disabled={locked}
+                className="px-2"
+            />
+            {showResultantText && <p className={cn("font-extralight w-24 text-left", resultantTextClassName)}>{additionText}</p>}
         </div>
     )
 }

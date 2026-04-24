@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ArrowCircleRight } from "@phosphor-icons/react";
 import InputNumber from "./InputNumber";
+import Button from "./Button";
 import { cn } from "@/lib/utils";
 
 export type ControllerAbsoluteMoveProps = {
@@ -15,9 +16,11 @@ export type ControllerAbsoluteMoveProps = {
     className?: string;
     /** Disables interaction and applies dimmed styling when true. */
     locked?: boolean;
+    /** Whether to display the units label next to the input. Defaults to true. */
+    showLabel?: boolean;
 }
 
-export default function ControllerAbsoluteMove({handleEnter, inputLabel, classNameInput, className, locked, ...props}: ControllerAbsoluteMoveProps) {
+export default function ControllerAbsoluteMove({handleEnter, inputLabel, classNameInput, className, locked, showLabel = true, ...props}: ControllerAbsoluteMoveProps) {
     const [ inputValue, setInputValue ] = useState<number | null>(null);
 return (
     <div 
@@ -28,8 +31,8 @@ return (
         )}
         {...props}
     >
-        <InputNumber disabled={locked} label={inputLabel} labelPosition='right' className={cn(`w-32`)} handleEnter={handleEnter} onChange={(input) => setInputValue(input)} classNameInput={cn("text-right", classNameInput)}/>
-        <ArrowCircleRight size={24} className="hover:text-sky-500 hover:cursor-pointer" onClick={()=>handleEnter && handleEnter(inputValue)}/>
+        <InputNumber disabled={locked} label={showLabel ? inputLabel : undefined} labelPosition='right' className={cn(`${showLabel ? 'w-32' : 'w-24'}`)} handleEnter={handleEnter} onChange={(input) => setInputValue(input)} classNameInput={cn("text-right", classNameInput)}/>
+        <Button disabled={locked} text="Set" size="small" onClick={()=>handleEnter && handleEnter(inputValue)} />
     </div>
 )
 }

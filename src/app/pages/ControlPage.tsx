@@ -1,5 +1,6 @@
 import Paper from "@/components/Paper";
 import EndstationViewer from "@/components/RIXSSpectrometer3D";
+import TablePVController from "@/components/TablePVController";
 import { useState } from "react";
 
 export default function ControlPage() {
@@ -24,30 +25,13 @@ export default function ControlPage() {
                                 hideRegionOverlays={true}
                                 regionLabelClassName="text-white bg-transparent"
                             />
-                            <div className="w-full lg:w-1/2 px-8 min-h-96">
-                                {selectedDevice ? (
-                                    <div className="h-full w-full max-w-96 text-left rounded-lg border-2  p-4 m-auto">
-                                        <h3 className="font-semibold mb-2">Selected Device</h3>
-                                        <p className="text-sm  mb-2">
-                                            <span className="font-medium">Name:</span> {selectedDevice.name}
-                                        </p>
-                                        {selectedDevice.motors && selectedDevice.motors.length > 0 && (
-                                            <div className="text-sm ">
-                                                <span className="font-medium">Associated Motors:</span>
-                                                <ul className="ml-4 mt-1">
-                                                    {selectedDevice.motors.map((motor, index) => (
-                                                        <li key={index} className="text-xs">• {motor}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
+                            <div className="w-full lg:w-1/2 px-8 min-h-96 flex items-center justify-center">
+                                {selectedDevice?.motors && selectedDevice.motors.length > 0 ? (
+                                    <TablePVController pvs={selectedDevice.motors} className="bg-transparent shadow-none"/>
+                                ) : selectedDevice ? (
+                                    <p className="text-white/60 text-sm">No motors associated with {selectedDevice.name}</p>
                                 ) : (
-                                    <div className="h-full w-full max-w-96 flex items-center justify-center rounded-lg border-2 border-dashed border-teal-200">
-                                        <div className="text-center">
-                                            <p className="text-white/60 text-sm">Click a region in the endstation schematic to see details</p>
-                                        </div>
-                                    </div>
+                                    <p className="text-white/60 text-sm">Click a region in the endstation schematic to see details</p>
                                 )}
                             </div>
                         </div>
