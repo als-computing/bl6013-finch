@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useOphydPVSocket from '@/api/ophyd/useOphydPVSocket';
 import SignalMonitorPlotDevice from '@/components/SignalMonitorPlotDevice';
 import XYPlotDevice from '@/components/XYPlotDevice';
+import { Eraser, StopCircle, PlayCircle, PersonSimpleRun, BookOpenText, Ruler, ArrowFatLineUp, ArrowFatLineDown } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 export interface StripchartProps {
@@ -19,6 +20,9 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
     const [stepSize, setStepSize] = useState<number>(1.0);
     const [plotsEnabled, setPlotsEnabled] = useState<boolean>(true);
     const [plotKey, setPlotKey] = useState<number>(0);
+
+    // Default input styling to match Scan component
+    const inputStyles = "p-1 border border-gray-300 bg-sky-800 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100";
 
     // Generate RBV PV names for plotting
     const getPlottingPV = (pvName: string) => {
@@ -67,17 +71,19 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
     };
 
     return (
-        <div className={cn("h-full p-4 space-y-4 overflow-auto text-gray-800", className)}>
-            {/* Top Row - Motor and Signal Selection */}
-            <div className="grid grid-cols-2 gap-6">
-                {/* Motor Section */}
-                <div className="space-y-2">
+        <div className={cn("h-full p-4 space-y-4 overflow-auto text-gray-800 bg-sky-950", className)}>
+            {/* Main Controls Layout */}
+            <div className="flex flex-wrap gap-8 items-center justify-center w-fit m-auto pb-8">
+                {/* Motor, Signal, and Step Size Form */}
+                <div className="space-y-3 flex-shrink-0 m-auto">
+                    {/* Row 1: Motor Selection */}
                     <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 min-w-fit">Motor:</label>
+                        <PersonSimpleRun size={20} className="text-white" />
+                        <label className="text-sm font-medium text-white min-w-20">Motor:</label>
                         <select
                             value={selectedMotor}
                             onChange={(e) => setSelectedMotor(e.target.value)}
-                            className="flex-1 p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={cn("w-48", inputStyles)}
                         >
                             {motorPVs.map((pv) => (
                                 <option key={pv} value={pv}>
@@ -85,26 +91,22 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
                                 </option>
                             ))}
                         </select>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700 min-w-fit">Set Position:</span>
-                        <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded border flex-1">
+                        <span className="text-xs font-mono text-gray-300 ml-2 min-w-24">
                             {typeof motorValue === 'number' ? motorValue.toFixed(3) : motorValue}
                             {motorDevice?.units && typeof motorValue === 'number' && (
                                 <span className="text-xs ml-1">{motorDevice.units}</span>
                             )}
                         </span>
                     </div>
-                </div>
 
-                {/* Signal Section */}
-                <div className="space-y-2">
+                    {/* Row 2: Signal Selection */}
                     <div className="flex items-center gap-2">
-                        <label className="text-sm font-medium text-gray-700 min-w-fit">Signal:</label>
+                        <BookOpenText size={20} className="text-white" />
+                        <label className="text-sm font-medium text-white min-w-20">Signal:</label>
                         <select
                             value={selectedSignal}
                             onChange={(e) => setSelectedSignal(e.target.value)}
-                            className="flex-1 p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={cn("w-48", inputStyles)}
                         >
                             {signalPVs.map((pv) => (
                                 <option key={pv} value={pv}>
@@ -112,69 +114,68 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
                                 </option>
                             ))}
                         </select>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700 min-w-fit">RBV:</span>
-                        <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded border flex-1">
+                        <span className="text-xs font-mono text-gray-300 ml-2 min-w-24">
                             {typeof signalValue === 'number' ? signalValue.toFixed(3) : signalValue}
                             {signalRBVDevice?.units && typeof signalValue === 'number' && (
                                 <span className="text-xs ml-1">{signalRBVDevice.units}</span>
                             )}
                         </span>
                     </div>
+
+                    {/* Row 3: Step Size */}
+                    <div className="flex items-center gap-2">
+                        <Ruler size={20} className="text-white" />
+                        <label className="text-sm font-medium text-white min-w-20">Step Size:</label>
+                        <input
+                            type="number"
+                            value={stepSize}
+                            onChange={(e) => setStepSize(parseFloat(e.target.value) || 0)}
+                            step="0.1"
+                            className={cn("w-24", inputStyles)}
+                        />
+                    </div>
+                </div>
+
+                {/* Button Controls */}
+                <div className="flex flex-wrap gap-4 m-auto p-4 rounded-md border border-slate- bg-slate-300">
+                    {/* Motor Control Buttons */}
+                    <div className="flex items-start gap-4">
+                        <div className="flex flex-col items-center gap-1">
+                            <button
+                                onClick={handleStepDown}
+                                disabled={!motorDevice?.connected}
+                                className="p-3 bg-sky-600 hover:bg-slate-400 disabled:bg-gray-400 rounded-md transition-colors flex items-center justify-center shadow-lg"
+                            >
+                                <ArrowFatLineDown size={36} className="text-white" />
+                            </button>
+                            <span className="text-xs text-slate-800 font-extralight">step down</span>
+                        </div>
+                        
+                        {/* Motor Readback Display */}
+                        <div className="flex flex-col items-center justify-center px-4 py-0 min-w-32">
+                            <div className="text-sm text-sky-800 text-center mb-1 font-semibold">{selectedMotor}</div>
+                            <div className="text-2xl text-black font-medium text-center py-1">
+                                {typeof motorValue === 'number' ? motorValue.toFixed(3) : 'N/C'}
+                            </div>
+                            <div className="text-xs text-slate-800 text-center mt-0 font-extralight">readback</div>
+                        </div>
+                        
+                        <div className="flex flex-col items-center gap-1">
+                            <button
+                                onClick={handleStepUp}
+                                disabled={!motorDevice?.connected}
+                                className="p-3 bg-sky-600 hover:bg-slate-400 disabled:bg-gray-400 rounded-md transition-colors flex items-center justify-center shadow-lg"
+                            >
+                                <ArrowFatLineUp size={36} className="text-white" />
+                            </button>
+                            <span className="text-xs text-slate-800 font-extralight">step up</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Motor Control Row */}
-            <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                <label className="text-sm font-medium text-gray-700">Step Size:</label>
-                <input
-                    type="number"
-                    value={stepSize}
-                    onChange={(e) => setStepSize(parseFloat(e.target.value) || 0)}
-                    step="0.1"
-                    className="w-24 p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                    onClick={handleStepUp}
-                    disabled={!motorDevice?.connected}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-md transition-colors"
-                >
-                    Step Up
-                </button>
-                <button
-                    onClick={handleStepDown}
-                    disabled={!motorDevice?.connected}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-md transition-colors"
-                >
-                    Step Down
-                </button>
-                
-                {/* Divider */}
-                <div className="h-8 w-px bg-gray-300"></div>
-                
-                {/* Plot Control Buttons */}
-                <button
-                    onClick={handleClearPlots}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
-                >
-                    Clear
-                </button>
-                <button
-                    onClick={handleTogglePlots}
-                    className={cn(
-                        "px-4 py-2 text-white text-sm font-medium rounded-md transition-colors",
-                        plotsEnabled 
-                            ? "bg-orange-600 hover:bg-orange-700" 
-                            : "bg-gray-600 hover:bg-gray-700"
-                    )}
-                >
-                    {plotsEnabled ? 'Done' : 'Resume'}
-                </button>
-            </div>
-
             {/* Live Signal Plot */}
-            <div className="flex-1 min-h-[300px] bg-white border border-gray-200 rounded-lg p-4">
+            <div className="flex-1 min-h-[300px] border border-gray-200 rounded-lg p-4">
                 {selectedSignal && signalRBVDevice ? (
                     <div className="h-full relative">
                         <SignalMonitorPlotDevice 
@@ -182,6 +183,10 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
                             device={plotsEnabled ? signalRBVDevice : null}
                             deviceLabel={selectedSignalRBV}
                             className="h-full"
+                            plotBgColor="#142E48"
+                            paperBgColor="#142E48"
+                            color="#F88626"
+                            axisTitleColor='#E2E8F0'
                         />
                         {!plotsEnabled && (
                             <div className="absolute top-2 right-2 px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded shadow">
@@ -200,9 +205,27 @@ export default function Stripchart({ motorPVs, signalPVs, className = '' }: Stri
                     </div>
                 )}
             </div>
-
+            {/* Plot Control Buttons */}
+            <div className="flex items-center gap-2 justify-center w-full space-x-8">
+                <button
+                    onClick={handleClearPlots}
+                    title="Clear data from plots"
+                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
+                >
+                    <Eraser size={24} />
+                    Clear
+                </button>
+                <button
+                    onClick={handleTogglePlots}
+                    title="Stop/resume the plots from receiving new data points"
+                    className="px-4 py-2 border border-gray-300 text-gray-300 text-sm font-medium rounded-md hover:text-white transition-colors flex items-center gap-2"
+                >
+                    {plotsEnabled ? <StopCircle size={24} /> : <PlayCircle size={24} />}
+                    {plotsEnabled ? 'Stop' : 'Resume'}
+                </button>
+            </div>
             {/* XY Plot - Motor Position vs Signal */}
-            <div className="h-[300px] bg-white border border-gray-200 rounded-lg p-4">
+            <div className="h-[400px] border border-gray-200 rounded-lg p-4">
                 <XYPlotDevice
                     key={`xy-${plotKey}`}
                     xDevice={motorRBVDevice}

@@ -295,6 +295,7 @@ export default function Scan({ motorOphydNames, signalOphydNames, className = ''
                         yAxisLabel="Signal"
                         paused={!plotsEnabled}
                         className="h-full"
+                        color="#F88626"
                     />
                 ) : (
                     <div className="h-full flex items-center justify-center text-gray-500">

@@ -33,6 +33,20 @@ export type SignalMonitorPlotDeviceProps = {
     yAxisRange?: [number, number];
     /** When true, renders markers on each data point with size scaled by recency. Defaults to false. */
     showMarkers?: boolean;
+    /** Background color for the plot area. */
+    plotBgColor?: string;
+    /** Background color for the entire plot paper/canvas. */
+    paperBgColor?: string;
+    /** Color of the grid lines. */
+    gridColor?: string;
+    /** Color of the zero lines (if they exist). */
+    zeroLineColor?: string;
+    /** Color of the tick labels on axes. */
+    tickLabelColor?: string;
+    /** Color of the axis titles. */
+    axisTitleColor?: string;
+    /** Color of the plot title. */
+    plotTitleColor?: string;
 };
 
 export default function SignalMonitorPlotDevice({
@@ -47,6 +61,13 @@ export default function SignalMonitorPlotDevice({
     yAxisTitle,
     yAxisRange,
     showMarkers = false,
+    plotBgColor,
+    paperBgColor,
+    gridColor,
+    zeroLineColor,
+    tickLabelColor,
+    axisTitleColor,
+    plotTitleColor,
     ...props
 }: SignalMonitorPlotDeviceProps) {
     const styledData = { ...blankScatterData, mode: showMarkers ? 'lines+markers' as const : 'lines' as const, marker: { ...blankScatterData.marker, color } };
@@ -151,6 +172,13 @@ export default function SignalMonitorPlotDevice({
                 xAxisTitle={deviceLabel}
                 yAxisTitle={resolvedYAxisTitle}
                 yAxisRange={yAxisRange}
+                plotBgColor={plotBgColor}
+                paperBgColor={paperBgColor}
+                gridColor={gridColor}
+                zeroLineColor={zeroLineColor}
+                tickLabelColor={tickLabelColor}
+                axisTitleColor={axisTitleColor}
+                plotTitleColor={plotTitleColor}
                 {...props}
             />
         </div>
