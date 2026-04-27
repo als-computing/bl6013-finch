@@ -2,12 +2,14 @@ import Paper from "@/components/Paper";
 import EndstationViewer from "@/components/RIXSSpectrometer3D";
 import TablePVController from "@/components/TablePVController";
 import { useState } from "react";
+import React from "react";
 
 export default function ControlPage() {
-    const [selectedDevice, setSelectedDevice] = useState<{ name: string; motors?: string[] } | null>(null);
+    const [selectedDevice, setSelectedDevice] = useState<{ name: string; motors?: string[]; icon?: React.ReactNode } | null>(null);
 
-    const handleDeviceClick = (deviceName: string, motors: string[]) => {
-        setSelectedDevice({ name: deviceName, motors });
+    const handleDeviceClick = (deviceName: string, motors: string[], icon?: React.ReactNode) => {
+        console.log(`Clicked device: ${deviceName} with motors: ${motors.join(', ')}`);
+        setSelectedDevice({ name: deviceName, motors, icon });
     };
 
     return (
@@ -27,7 +29,14 @@ export default function ControlPage() {
                             />
                             <div className="w-full lg:w-1/2 px-8 min-h-96 flex items-center justify-center">
                                 {selectedDevice?.motors && selectedDevice.motors.length > 0 ? (
-                                    <TablePVController pvs={selectedDevice.motors} className="bg-transparent shadow-none"/>
+                                    <div className="flex flex-col items-center w-full">
+                                        {selectedDevice.icon && (
+                                            <div className="w-48 h-48 text-white">
+                                                {selectedDevice.icon}
+                                            </div>
+                                        )}
+                                        <TablePVController pvs={selectedDevice.motors} className="bg-transparent shadow-none"/>
+                                    </div>
                                 ) : selectedDevice ? (
                                     <p className="text-white/60 text-sm">No motors associated with {selectedDevice.name}</p>
                                 ) : (

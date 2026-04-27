@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useOphydPVSocket from '@/api/ophyd/useOphydPVSocket';
 import sampleDevices from '@/utils/sampleDevices.json';
+import { endstation } from '@/assets/bl6013Icons';
 import { cn } from '@/lib/utils';
 
 interface EndstationViewerProps {
   className?: string;
-  onDeviceClick?: (deviceName: string, motors: string[]) => void;
+  onDeviceClick?: (deviceName: string, motors: string[], icon?: React.ReactNode) => void;
   hideControls?: boolean;
   alwaysShowRegionLabels?: boolean;
   hideRegionOverlays?: boolean;
@@ -15,12 +16,12 @@ interface EndstationViewerProps {
 
 // Region definitions matching the Python implementation (x, y, w, h) - adjusted for 439px crop from top
 const REGIONS = [
-  { name: "Sample", x: 300, y: 249, w: 200, h: 70, motors: ["MainManipX", "MainManipY", "MainManipZ", "MainManiptheta"] }, // 688-439
-  { name: "Microscope", x: 495, y: 51, w: 275, h: 160, motors: ["MicroscopeX", "MicroscopeY", "MicroscopeZ"] }, // 490-439
-  { name: "Mirror", x: 1230, y: 201, w: 470, h: 275, motors: ["MirrorAngle"] }, // 640-439
-  { name: "Optics", x: 1260, y: 476, w: 550, h: 160, motors: ["SpectOpticsHeight", "SpectOpticsPitch", "SpectOpticsRoll"] }, // 915-439
-  { name: "Grating", x: 1560, y: 51, w: 555, h: 200, motors: ["GratingAngle"] }, // 490-439
-  { name: "Detector", x: 1890, y: 371, w: 330, h: 260, motors: ["DetectorX", "DetectorZ"] }, // 810-439
+  { name: "Sample", x: 300, y: 249, w: 200, h: 70, motors: ["MainManipX", "MainManipY", "MainManipZ", "MainManiptheta"], icon: endstation.sample }, // 688-439
+  { name: "Microscope", x: 495, y: 51, w: 275, h: 160, motors: ["MicroscopeX", "MicroscopeY", "MicroscopeZ"], icon: endstation.microscope }, // 490-439
+  { name: "Mirror", x: 1230, y: 201, w: 470, h: 275, motors: ["MirrorAngle"], icon: endstation.mirror }, // 640-439
+  { name: "Optics", x: 1260, y: 476, w: 550, h: 160, motors: ["SpectOpticsHeight", "SpectOpticsPitch", "SpectOpticsRoll"], icon: endstation.optics }, // 915-439
+  { name: "Grating", x: 1560, y: 51, w: 555, h: 200, motors: ["GratingAngle"], icon: endstation.grating }, // 490-439
+  { name: "Detector", x: 1890, y: 371, w: 330, h: 260, motors: ["DetectorX", "DetectorZ"], icon: endstation.detector }, // 810-439
 ];
 
 // PV overlays positioned on the image (img_x, img_y, pv_name, label) - adjusted for 439px crop from top
@@ -259,7 +260,7 @@ export default function EndstationViewer({
         // Set selected region (stays highlighted until another region or empty area is clicked)
         setSelectedRegion(hitRegion.name);
         if (onDeviceClick) {
-          onDeviceClick(hitRegion.name, hitRegion.motors);
+          onDeviceClick(hitRegion.name, hitRegion.motors, hitRegion.icon);
         }
       }
     } else {

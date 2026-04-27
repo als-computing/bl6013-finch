@@ -32,7 +32,7 @@ const themes: Record<'light' | 'dark', Theme> = {
         deviceNameCell: "text-black",
         lockButton: "text-sky-700 hover:text-sky-900 shrink-0",
         currentValueCell: "text-center text-md text-sky-700 font-medium",
-        controlInput: "bg-sky-200 shadow-inner rounded-md",
+        controlInput: "bg-sky-200 shadow-inner rounded-md text-black",
         toggleButton: "text-sky-700 hover:text-sky-900 shrink-0",
     },
     dark: {
@@ -43,7 +43,7 @@ const themes: Record<'light' | 'dark', Theme> = {
         deviceNameCell: "text-white",
         lockButton: "text-sky-300 hover:text-white shrink-0",
         currentValueCell: "text-center text-md text-white font-medium",
-        controlInput: "bg-sky-200 shadow-inner rounded-md",
+        controlInput: "bg-sky-200 shadow-inner rounded-md text-black",
         toggleButton: "text-sky-300 hover:text-white shrink-0",
     },
 };
