@@ -143,7 +143,7 @@ export default function TablePV({
             
             {/* PV Details Section */}
             {selectedPV && (
-                <div className="mt-4 p-4 bg-gray-100 rounded-lg relative">
+                <div className="mt-4 p-4 bg-gray-100 rounded-lg relative text-slate-700">
                     {/* Close Button */}
                     <button
                         onClick={() => setSelectedPV(null)}

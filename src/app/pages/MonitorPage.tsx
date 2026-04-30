@@ -6,6 +6,19 @@ import CameraContainer from "@/components/Camera/CameraContainer";
 import MultiCameraSelect from "@/features/MultiCameraSelect";
 import ScanOrStripchart from "@/features/ScanOrStripchart/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer, SecurityCamera, Table, LineSegments } from "@phosphor-icons/react";
+import pvConfig from "@/config/bl6013PVs.json";
+
+const pvMapToRows = (pvMap: Record<string, string>) =>
+    Object.entries(pvMap).map(([name, pv]) => ({ pv, name }));
+
+const { motor, signal, detector, camera } = pvConfig.hirrixs;
+
+const tablePVColumns: TableColumn[] = [
+    { heading: 'Motors',    icon: <Gear size={24} />,        pvs: pvMapToRows(motor) },
+    { heading: 'Signals',   icon: <Thermometer size={24} />, pvs: pvMapToRows(signal) },
+    { heading: 'Detectors', icon: <Atom size={24} />,        pvs: pvMapToRows(detector) },
+    { heading: 'Cameras',   icon: <Camera size={24} />,      pvs: pvMapToRows(camera) },
+];
 
 export default function MonitorPage() {
     // Define the devices for the synoptic view
@@ -74,62 +87,6 @@ export default function MonitorPage() {
         }
     ];
 
-    // Define the columns for the TablePV component
-    const tablePVColumns: TableColumn[] = [
-        {
-            heading: 'Motors',
-            icon: <Gear size={24} />,
-            pvs: [
-                { pv: 'IOC:m1', name: 'Motor 1' },
-                { pv: 'IOC:m2', name: 'Motor 2' },
-                { pv: 'fake:motor3', name: 'Motor 3' },
-                { pv: 'fake:motor4', name: 'Motor 4' },
-                { pv: 'fake:motor5', name: 'Motor 5' },
-                { pv: 'fake:motor6', name: 'Motor 6' },
-                { pv: 'fake:motor7', name: 'Motor 7' },
-                { pv: 'fake:motor8', name: 'Motor 8' },
-                { pv: 'fake:motor9', name: 'Motor 9' },
-                { pv: 'fake:motor10', name: 'Motor 10' },
-                { pv: 'fake:motor11', name: 'Motor 11' },
-                { pv: 'fake:motor12', name: 'Motor 12' },
-                { pv: 'fake:motor13', name: 'Motor 13' },
-                { pv: 'fake:motor14', name: 'Motor 14' },
-                { pv: 'fake:motor15', name: 'Motor 15' },
-                { pv: 'fake:motor16', name: 'Motor 16' },
-                { pv: 'fake:motor17', name: 'Motor 17' },
-                { pv: 'fake:motor18', name: 'Motor 18' },
-                { pv: 'fake:motor19', name: 'Motor 19' },
-                { pv: 'fake:motor20', name: 'Motor 20' },
-                { pv: 'fake:motor21', name: 'Motor 21' },
-                { pv: 'fake:motor22', name: 'Motor 22' }
-            ]
-        },
-        {
-            heading: 'Cameras',
-            icon: <Camera size={24} />,
-            pvs: [
-                { pv: 'fake:camera1', name: 'Camera 1' },
-                { pv: 'fake:camera2', name: 'Camera 2' }
-            ]
-        },
-        {
-            heading: 'Signals',
-            icon: <Thermometer size={24} />,
-            pvs: [
-                { pv: 'fake:temp1', name: 'Temperature 1' },
-                { pv: 'fake:temp2', name: 'Temperature 2' },
-                { pv: 'fake:pressure1', name: 'Pressure Sensor' }
-            ]
-        },
-        {
-            heading: 'Detectors',
-            icon: <Atom size={24} />,
-            pvs: [
-                { pv: 'fake:detector1', name: 'Main Detector' },
-                { pv: 'fake:detector2', name: 'Reference Det' }
-            ]
-        }
-    ];
     return (
        <Bento className="pb-8">
             {/* Synoptic Section - Full Width at Top */}
