@@ -121,7 +121,13 @@ export default function QSConsole({
     const handleWebSocketMessage = (event: MessageEvent) => {
         //console.log('received message from ws');
         //this function receives the websocket message and displays it to the client
-        const eventData = JSON.parse(event.data) as Record<string, string>;
+        //This may fail if we can't parse the event data, so put into try catch block
+        try {
+            const eventData = JSON.parse(event.data) as Record<string, string>;
+        } catch (error) {
+            console.error("Error parsing websocket message:", error);
+            return;
+        }
         //console.log({eventData});
         if ("msg" in eventData) {
 
