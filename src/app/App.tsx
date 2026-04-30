@@ -7,6 +7,8 @@ import ControlPage from './pages/ControlPage';
 import ScanPage from './pages/ScanPage';
 import PlanPage from './pages/PlanPage';
 import DataPage from './pages/DataPage';
+import AllComponentsPage from './pages/AllComponentsPage';
+import TablePVController from '@/components/TablePVController';
 
 import HubAppLayout from '@/components/HubAppLayout';
 
@@ -51,6 +53,17 @@ function App() {
       path: '/data',
       label: "Data",
       icon: <ChartBar size={32} />,
+    },
+    {
+      element: <AllComponentsPage />,
+      path: '/all-components',
+      label: "All Components",
+      icon: <StackPlus size={32} />,
+    },
+    {
+      element: <TablePVController pvs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4']} />,
+      path: '/pv-controller',
+      label: "PV Controller",
     }
   ]
   return (

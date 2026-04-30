@@ -1,6 +1,9 @@
 import Paper from "@/components/Paper";
 import EndstationViewer from "@/components/RIXSSpectrometer3D";
 import TablePVController from "@/components/TablePVController";
+import AreaDetectorSelect from "@/features/AreaDetectorSelect";
+import PVSelectorController from "@/features/PVSelectorController";
+import motors from "@/config/motorConfig";
 import { useState } from "react";
 import React from "react";
 
@@ -15,8 +18,7 @@ export default function ControlPage() {
     return (
         <div className="h-full w-full">
             <div className="flex flex-col gap-4 h-[calc(100vh-8rem)] w-full">
-
-                {/* Endstation Schematic - Right 2/3 */}
+                {/* Upper Full Width */}
                 <div className="w-full p-4 bg-sky-950 flex flex-wrap h-fit shadow-inner">
                         <div className="h-[calc(100%-2rem)] w-full bg-transparent flex flex-wrap">
                             <EndstationViewer 
@@ -31,8 +33,11 @@ export default function ControlPage() {
                                 {selectedDevice?.motors && selectedDevice.motors.length > 0 ? (
                                     <div className="flex flex-col items-center w-full">
                                         {selectedDevice.icon && (
-                                            <div className="w-48 h-48 text-white">
-                                                {selectedDevice.icon}
+                                            <div className="flex flex-col items-center gap-1">
+                                                <div className="w-48 h-48 text-white">
+                                                    {selectedDevice.icon}
+                                                </div>
+                                                <span className="text-white/80 text-sm font-medium">{selectedDevice.name}</span>
                                             </div>
                                         )}
                                         <TablePVController pvs={selectedDevice.motors} className="bg-transparent shadow-none"/>
@@ -46,15 +51,15 @@ export default function ControlPage() {
                         </div>
                 </div>
 
-
-                {/* Device Info Section - Left 1/3 */}
-                <div className="w-full">
-                    <Paper className="h-full p-4">
-                        <div className="h-full flex flex-col">
-                            <h2 className="text-xl font-semibold text-teal-800 mb-4">Device Info</h2>
-                            
-                        </div>
-                    </Paper>
+                {/* Lower Full Width */}
+                <div className="w-full flex flex-wrap gap-8 p-4">
+                    <AreaDetectorSelect
+                        detectors={[
+                            { prefix: "6013ANDOR", canvasSize: "medium", enableControlPanel: true, edmFileName: "ADBase.adl" },
+                            { prefix: "6013SIM1",  canvasSize: "medium", enableControlPanel: true, edmFileName: "simDetector.adl" },
+                        ]}
+                    />
+                    <PVSelectorController autoRBV pvs={motors} />
                 </div>
             </div>
         </div>

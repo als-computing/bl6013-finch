@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useOphydPVSocket from '@/api/ophyd/useOphydPVSocket';
-import sampleDevices from '@/utils/sampleDevices.json';
+import sampleDevices from '@/config/bl6013PVs.json';
 import { endstation } from '@/assets/bl6013Icons';
 import { cn } from '@/lib/utils';
 
@@ -15,13 +15,21 @@ interface EndstationViewerProps {
 }
 
 // Region definitions matching the Python implementation (x, y, w, h) - adjusted for 439px crop from top
+// const REGIONS = [
+//   { name: "Sample", x: 300, y: 249, w: 200, h: 70, motors: ["MainManipX", "MainManipY", "MainManipZ", "MainManiptheta"], icon: endstation.sample }, // 688-439
+//   { name: "Microscope", x: 495, y: 51, w: 275, h: 160, motors: ["MicroscopeX", "MicroscopeY", "MicroscopeZ"], icon: endstation.microscope }, // 490-439
+//   { name: "Mirror", x: 1230, y: 201, w: 470, h: 275, motors: ["MirrorAngle"], icon: endstation.mirror }, // 640-439
+//   { name: "Optics", x: 1260, y: 476, w: 550, h: 160, motors: ["SpectOpticsHeight", "SpectOpticsPitch", "SpectOpticsRoll"], icon: endstation.optics }, // 915-439
+//   { name: "Grating", x: 1560, y: 51, w: 555, h: 200, motors: ["GratingAngle"], icon: endstation.grating }, // 490-439
+//   { name: "Detector", x: 1890, y: 371, w: 330, h: 260, motors: ["DetectorX", "DetectorZ"], icon: endstation.detector }, // 810-439
+// ];
 const REGIONS = [
-  { name: "Sample", x: 300, y: 249, w: 200, h: 70, motors: ["MainManipX", "MainManipY", "MainManipZ", "MainManiptheta"], icon: endstation.sample }, // 688-439
-  { name: "Microscope", x: 495, y: 51, w: 275, h: 160, motors: ["MicroscopeX", "MicroscopeY", "MicroscopeZ"], icon: endstation.microscope }, // 490-439
-  { name: "Mirror", x: 1230, y: 201, w: 470, h: 275, motors: ["MirrorAngle"], icon: endstation.mirror }, // 640-439
-  { name: "Optics", x: 1260, y: 476, w: 550, h: 160, motors: ["SpectOpticsHeight", "SpectOpticsPitch", "SpectOpticsRoll"], icon: endstation.optics }, // 915-439
-  { name: "Grating", x: 1560, y: 51, w: 555, h: 200, motors: ["GratingAngle"], icon: endstation.grating }, // 490-439
-  { name: "Detector", x: 1890, y: 371, w: 330, h: 260, motors: ["DetectorX", "DetectorZ"], icon: endstation.detector }, // 810-439
+  { name: "Sample", x: 300, y: 249, w: 200, h: 70, motors: ["BL6013:MainManipX", "BL6013:MainManipY", "BL6013:MainManipZ", "BL6013:MainManiptheta"], icon: endstation.sample }, // 688-439
+  { name: "Microscope", x: 495, y: 51, w: 275, h: 160, motors: ["BL6013:MicroscopeX", "BL6013:MicroscopeY", "BL6013:MicroscopeZ"], icon: endstation.microscope }, // 490-439
+  { name: "Mirror", x: 1230, y: 201, w: 470, h: 275, motors: ["BL6013:MirrorAngle"], icon: endstation.mirror }, // 640-439
+  { name: "Optics", x: 1260, y: 476, w: 550, h: 160, motors: ["BL6013:SpectOpticsHeight", "BL6013:SpectOpticsPitch", "BL6013:SpectOpticsRoll"], icon: endstation.optics }, // 915-439
+  { name: "Grating", x: 1560, y: 51, w: 555, h: 200, motors: ["BL6013:GratingAngle"], icon: endstation.grating }, // 490-439
+  { name: "Detector", x: 1890, y: 371, w: 330, h: 260, motors: ["BL6013:DetectorX", "BL6013:DetectorZ"], icon: endstation.detector }, // 810-439
 ];
 
 // PV overlays positioned on the image (img_x, img_y, pv_name, label) - adjusted for 439px crop from top

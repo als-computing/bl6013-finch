@@ -196,7 +196,7 @@ export default function QSConsole({
 
         
         socket.addEventListener("error", error => {
-            alert("Unable to establish connection to WS, check that the WS server is running and that the path/port are correct");
+            //alert("Unable to establish connection to WS, check that the WS server is running and that the path/port are correct");
             setStatusMessage("Last connection attempt to websocket failed at " + dayjs().format('HH:MM A'))
             setIsToggleOn(false);
             console.log({error});
