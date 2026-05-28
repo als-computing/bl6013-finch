@@ -7,11 +7,13 @@ import MultiCameraSelect from "@/features/MultiCameraSelect";
 import ScanOrStripchart from "@/features/ScanOrStripchart/ScanOrStripchart";
 import { Gear, Circle, ArrowsClockwise, Atom, Camera, Thermometer, SecurityCamera, Table, LineSegments } from "@phosphor-icons/react";
 import pvConfig from "@/config/bl6013PVs.json";
+import synopConfig from "@/config/amber.json";
 
 const pvMapToRows = (pvMap: Record<string, string>) =>
     Object.entries(pvMap).map(([name, pv]) => ({ pv, name }));
 
 const { motor, signal, detector, camera } = pvConfig.hirrixs;
+const { amber } = synopConfig;
 
 const tablePVColumns: TableColumn[] = [
     { heading: 'Motors',    icon: <Gear size={24} />,        pvs: pvMapToRows(motor) },
@@ -24,59 +26,129 @@ export default function MonitorPage() {
     // Define the devices for the synoptic view
     const synopticDevices: SynopticDevice[] = [
         {
+            name: 'IVID',
+            icon: <Atom size={24} />,
+            subtitle: 'Undulator',
+            pvs: [
+                { pv: amber.motor.IVID.Gap, nickname: 'Gap' },
+                { pv: amber.motor.IVID.GapReq, nickname: 'Gap Req' },
+            ]
+        },
+        {
+            name: 'M101',
+            icon: <Circle size={24} />,
+            subtitle: 'H-Mirror',
+            pvs: [
+                { pv: amber.motor.M101.M101Pitch, nickname: 'Pitch' },
+                { pv: amber.motor.M101.M101Roll, nickname: 'Roll' }
+            ]
+        },
+        {
+            name: 'DIAG101',
+            icon: <Gear size={24} />,
+            subtitle: '',
+            pvs: [
+                { pv: amber.motor.DIAG101, nickname: 'Pos' }
+            ]
+        },
+        {
             name: 'Mono',
-            icon: <Atom size={24} />,
-            group: 'Optics',
-            pvs: [
-                { pv: 'IOC:m1', nickname: 'Theta' },
-                { pv: 'IOC:m2', nickname: 'Height' },
-                { pv: 'IOC:m3', nickname: 'Pitch' },
-            ]
-        },
-        {
-            name: 'Motor 4',
-            icon: <Circle size={24} />,
-            group: 'Motors',
-            pvs: [
-                { pv: 'IOC:m4' }
-            ]
-        },
-        {
-            name: 'Actuator 5',
             icon: <Gear size={24} />,
-            group: 'Actuators',
+            subtitle: 'M102+G10x',
             pvs: [
-                { pv: 'IOC:m5' }
+                { pv: amber.motor.M102, nickname: 'M102' },
+                { pv: amber.motor.G10x, nickname: 'G10x' },
+                { pv: amber.motor.MonoEnergy, nickname: 'Energy' }
             ]
         },
         {
-            name: 'Actuator 6',
-            icon: <Gear size={24} />,
-            group: 'Actuators',
-            pvs: [
-                { pv: 'IOC:m6' }
-            ]
-        },
-        {
-            name: 'Rotation 7',
+            name: 'M131',
             icon: <ArrowsClockwise size={24} />,
-            group: 'Rotation',
+            subtitle: 'H-Mirror',
             pvs: [
-                { pv: 'IOC:m7' }
+                { pv: amber.motor.M131.M131Pitch, nickname: 'Pitch' },
+                { pv: amber.motor.M131.M131Roll, nickname: 'Roll' }
             ]
         },
         {
-            name: 'Fake Device',
+            name: 'SLIT131',
             icon: <Circle size={24} />,
-            group: 'Test',
+            subtitle: 'Exit Slit',
             pvs: [
-                { pv: 'fakePV', nickname: 'Test Motor' }
+                { pv: amber.motor.SLIT, nickname: 'V-Size' }
             ]
         },
         {
-            name: 'BL6.0.1.3 Beamline',
+            name: 'SHTR131',
+            icon: <Circle size={24} />,
+            subtitle: 'Shutter',
+            pvs: [
+                { pv: amber.motor.SHTR131.SHTR131Pos, nickname: 'Pos' },
+                { pv: amber.motor.SHTR131.SHTR131PZT, nickname: 'PZT' }
+            ]
+        },
+        {
+            name: 'DIAG132',
+            icon: <Circle size={24} />,
+            subtitle: 'DIAG132',
+            pvs: [
+                { pv: amber.motor.DIAG132, nickname: 'Pos' }
+            ]
+        },
+        {
+            name: 'AP131',
+            icon: <Circle size={24} />,
+            subtitle: 'H-Aperture',
+            pvs: [
+                { pv: amber.motor.AP131.AP131Pos, nickname: 'Pos' },
+                { pv: amber.motor.AP131.AP131Size, nickname: 'Size' }
+            ]
+        },
+        {
+            name: 'AP132',
+            icon: <Circle size={24} />,
+            subtitle: 'V-Aperture',
+            pvs: [
+                { pv: amber.motor.AP132.AP132Pos, nickname: 'Pos' },
+                { pv: amber.motor.AP132.AP132Size, nickname: 'Size' }
+            ]
+        },
+        {
+            name: 'M132',
+            icon: <Circle size={24} />,
+            subtitle: 'H-Mirror',
+            pvs: [
+                { pv: amber.motor.M132, nickname: 'Pitch' }
+            ]
+        },
+        {
+            name: 'M133',
+            icon: <Circle size={24} />,
+            subtitle: 'V-Mirror',
+            pvs: [
+                { pv: amber.motor.M133, nickname: 'Pitch' }
+            ]
+        },
+        {
+            name: 'DIAG133',
+            icon: <Circle size={24} />,
+            subtitle: '',
+            pvs: [
+                { pv: amber.motor.DIAG133, nickname: 'Pos' }
+            ]
+        },
+        {
+            name: 'DIAG134',
+            icon: <Circle size={24} />,
+            subtitle: '',
+            pvs: [
+                { pv: amber.motor.DIAG134, nickname: 'Pos' }
+            ]
+        },
+        {
+            name: 'HiRRIXS Endstation',
             icon: <Atom size={24} />,
-            group: 'Beamline',
+            subtitle: '',
             isBeamline: true,
             pvs: [
                 { pv: 'IOC:beam_current', nickname: 'Beam Current' },

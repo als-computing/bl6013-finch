@@ -16,6 +16,8 @@ export interface SynopticDevice {
     icon?: React.ReactNode;
     /** Array of PVs associated with this device */
     pvs: SynopticPV[];
+    /** Optional subtitle beneath the display name */
+    subtitle?: string;
     /** Group/category for organizing devices (optional) */
     group?: string;
     /** If true, this device will be displayed as a special beamline card */
@@ -84,10 +86,10 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                     {displayName}
                 </h3>
                 
-                {/* Group/Category */}
-                {device.group && (
+                {/* subtitle */}
+                {device.subtitle && (
                     <span className="text-xs opacity-70 mb-1">
-                        {device.group}
+                        {device.subtitle}
                     </span>
                 )}
                 
