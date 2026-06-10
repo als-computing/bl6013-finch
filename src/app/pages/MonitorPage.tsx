@@ -193,10 +193,10 @@ export default function MonitorPage() {
             {/* Strip Charts / Scan */}
             <Paper className="flex-1 min-h-fit w-full text-slate-700">
                 <ScanOrStripchart 
-                    motorPVs={['IOC:m1', 'IOC:m2', 'IOC:m3', 'IOC:m4', 'IOC:m5']}
-                    signalPVs={['IOC:m6', 'IOC:m7', 'IOC:m8']}
-                    motorOphydNames={['sim_motor']}
-                    signalOphydNames={['sim_m1', 'sim_m2', 'sim_m3']}
+                    motorPVs={Object.values(motor)}
+                    signalPVs={Object.values(signal)}
+                    motorOphydNames={Object.keys(motor)}
+                    signalOphydNames={Object.keys(signal)}
                 />
             </Paper>
        </Bento>

@@ -1,5 +1,6 @@
 import React from 'react';
 import useOphydPVSocket from '@/api/ophyd/useOphydPVSocket';
+import TablePVController from '@/components/TablePVController';
 import { cn } from '@/lib/utils';
 
 export interface SynopticPV {
@@ -167,7 +168,7 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
             
             {/* Details Section - Shows when a device is selected */}
             {selectedDevice && (
-                <div className="mt-4 p-6 bg-gray-100 border-2 border-gray-300 rounded-lg relative">
+                <div className="mt-4 mb-8 p-6 rounded-lg relative bg-white/10 w-fit m-auto ring-2 ring-blue-400 scale-105">
                     {/* Close Button */}
                     <button
                         onClick={() => setSelectedDevice(null)}
@@ -177,48 +178,16 @@ export default function Synoptic({ devices, className = '', allowWrap = true }: 
                         ×
                     </button>
                     
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4 pr-10">Device Details: {selectedDevice.name}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-700 mb-2">Device Information</h3>
-                            <div className="space-y-2 text-sm">
-                                <p><span className="font-medium">Name:</span> {selectedDevice.name}</p>
-                                <p><span className="font-medium">Group:</span> {selectedDevice.group || 'N/A'}</p>
-                                <p><span className="font-medium">Number of PVs:</span> {selectedDevice.pvs.length}</p>
+                    <div className="flex flex-col items-center w-full">
+                        {selectedDevice.icon && (
+                            <div className="flex flex-col items-center gap-1 mb-2">
+                                <div className="w-24 h-24 flex items-center justify-center text-white">
+                                    {React.cloneElement(selectedDevice.icon as React.ReactElement, { size: 96 })}
+                                </div>
+                                <span className="text-white text-sm font-medium">{selectedDevice.name}</span>
                             </div>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-700 mb-2">PV Details</h3>
-                            <div className="space-y-2">
-                                {selectedDevice.pvs.map((pv) => {
-                                    const ophydDevice = ophydDevices[pv.pv];
-                                    const isConnected = ophydDevice?.connected || false;
-                                    const value = isConnected && ophydDevice?.value !== undefined ? ophydDevice.value : (isConnected ? 'N/A' : 'N/C');
-                                    const units = (ophydDevice?.units || '').slice(0, 3);
-                                    
-                                    return (
-                                        <div key={pv.pv} className="p-3 bg-white rounded border">
-                                            <div className="flex justify-between items-center mb-1">
-                                                <span className="font-medium text-sm">{pv.nickname || pv.pv}</span>
-                                                <span className={`text-xs px-2 py-1 rounded ${isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                                                    {isConnected ? 'Connected' : 'Disconnected'}
-                                                </span>
-                                            </div>
-                                            <div className="text-xs text-gray-600">
-                                                <p><span className="font-medium">PV:</span> {pv.pv}</p>
-                                                <p><span className="font-medium">Value:</span> {typeof value === 'number' ? value.toFixed(3) : value} {units}</p>
-                                                {ophydDevice?.timestamp && (
-                                                    <p><span className="font-medium">Last Update:</span> {new Date(ophydDevice.timestamp * 1000).toLocaleTimeString()}</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-4 text-sm text-gray-600">
-                        <p>Click the device card again or use the × button to close this details view.</p>
+                        )}
+                        <TablePVController pvs={selectedDevice.pvs.map((pv) => pv.pv)} className="w-fit bg-transparent shadow-none" />
                     </div>
                 </div>
             )}

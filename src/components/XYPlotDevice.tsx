@@ -115,7 +115,7 @@ export default function XYPlotDevice({
 
     if (!bothDevicesConnected || !bothDevicesHaveNumericValues) {
         return (
-            <div className={cn("h-full flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 text-gray-800", className)}>
+            <div className={cn(`${bothDevicesConnected ? 'bg-gray-50' : 'bg-transparent'} h-full flex items-center justify-center border-2 border-dashed border-gray-300 text-gray-800`, className)}>
                 <div className="text-center">
                     <p className="text-sm text-gray-600 mb-2">XY Plot</p>
                     <p className="text-xs text-gray-500">
